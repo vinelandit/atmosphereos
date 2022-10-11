@@ -1,0 +1,81 @@
+<html>
+<head><title>Atmosphere OS Media Screen Frame</title></head>
+<style>
+	body,html{
+		margin:0;
+		padding:0;
+		overflow:hidden;
+		background-color:black;
+	}
+	a {
+		position:absolute;
+		left:0;
+		top:0;
+		width:100px;
+		z-index:2;
+	}
+	iframe {
+		margin:0;
+		padding:0;
+		position:absolute;
+		left:0;
+		top:0;
+		z-index:1;
+		width:100%;
+		overflow:hidden;
+		height:100%;
+		visibility:hidden;		
+	}
+</style>
+<body>
+<a href="#" onclick="openFullscreen();this.style.display='none'">do me full</a>
+<iframe id="inner" frameBorder="0" src=""></iframe>
+<script>
+	function openFullscreen() {
+		var elem = document.documentElement;
+	  if (elem.requestFullscreen) {
+	    elem.requestFullscreen();
+	  } else if (elem.mozRequestFullScreen) { /* Firefox */
+	    elem.mozRequestFullScreen();
+	  } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+	    elem.webkitRequestFullscreen();
+	  } else if (elem.msRequestFullscreen) { /* IE/Edge */
+	    elem.msRequestFullscreen();
+	  }
+	}
+	function parseURL(url) {
+	    var parser = document.createElement('a'),
+	        searchObject = {},
+	        queries, split, i;
+	    // Let the browser do the work
+	    parser.href = url;
+	    // Convert query string to object
+	    queries = parser.search.replace(/^\?/, '').split('&');
+	    for( i = 0; i < queries.length; i++ ) {
+	        split = queries[i].split('=');
+	        searchObject[split[0]] = split[1];
+	    }
+	    return {
+	        protocol: parser.protocol,
+	        host: parser.host,
+	        hostname: parser.hostname,
+	        port: parser.port,
+	        pathname: parser.pathname,
+	        search: parser.search,
+	        searchObject: searchObject,
+	        hash: parser.hash
+	    };
+	}
+	window.onload = function(){
+		var url = parseURL(location.href);
+		var iframeURL = '/screen';
+		if(typeof url.searchObject.screen !== 'undefined' && url.searchObject.screen!='') {
+			iframeURL += '/'+url.searchObject.screen;
+		}
+		document.getElementById('inner').src = iframeURL;
+		document.getElementById('inner').style.visibility = 'visible';
+	};
+	</script>
+
+</body>
+<html>

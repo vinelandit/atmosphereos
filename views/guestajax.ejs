@@ -1,0 +1,112 @@
+<%
+// first some validation: 
+// is the accumulator name valid, and 
+// is the value valid?
+var response = '';
+
+var valid = true;
+var project = live.project;
+var accumulatorValues = live.accumulatorValues;
+var aliases = atmos.aliases;
+var clients = atmos.clients;
+
+if(project) {
+	var validAcc = false;
+	for(var i in project.accumulators) {
+		if(project.accumulators[i].name==accumulator) {
+			validAcc = true;
+			var myAcc = project.accumulators[i];
+			break;
+		}
+	}
+	if(validAcc) {
+		// get type
+		if(myAcc.type=='counter') {
+			value = parseFloat(value);
+		} else {
+			if(value.length==0) {
+				// empty, no good
+				valid = false;
+				response = 'Missing text.';
+			} 
+		}
+		if(valid) {
+			if(myAcc.restrict=='restricted') {
+				// check that the user hasn't submitted already
+				if(typeof myAcc.submissions !=='undefined' && myAcc.submissions.indexOf(clientIP)>-1) {
+					valid = false;
+					response = 'You have already submitted your choice.';
+				}
+			}
+			if(valid) {
+				// okay, ready to process
+				if(typeof accumulatorValues[accumulator]=='undefined') {
+					if(myAcc.type=='counter') {
+						accumulatorValues[accumulator]=parseFloat(myAcc.initVal);
+					
+					} else {
+						if(myAcc.type=='text (multiple)') {
+							accumulatorValues[accumulator] = [ myAcc.initVal,value ];
+						} else {
+							accumulatorValues[accumulator] = value;
+						}
+					}
+
+					response = 'Thank you. You were the first to respond!';
+				} else {
+					if(myAcc.type=='counter') {
+						accumulatorValues[accumulator]=parseFloat(accumulatorValues[accumulator])+value;
+					
+					} else {
+						if(myAcc.type=='text (multiple)') {
+							accumulatorValues[accumulator].push(value);
+						} else {
+							accumulatorValues[accumulator] = value;
+						}
+					}
+					response = 'Thanks for responding.';
+				}
+
+				// send notification to all screens
+				// todo: only send to screens that need it
+				for(a in aliases) {
+           if(a!='MASTER') {
+
+              
+              var r = {
+                "to":a,
+                "command":"accumulator",
+                "name":myAcc.name,
+                "value":accumulatorValues[accumulator]
+              }
+              myClientID = aliases[a];
+              clients[myClientID].sendUTF(JSON.stringify(r));
+            }
+        }
+
+				if(typeof myAcc.submissions == 'undefined') {				
+					myAcc.submissions = [];
+				}
+				myAcc.submissions.push(clientIP);
+
+
+        		live.scanConditionals();
+			}
+			
+
+		}
+
+		
+		console.log(accumulatorValues);		
+		console.log(myAcc.submissions);				
+			
+		
+	} else {
+		valid = false;
+		console.log('INVALID',project);
+		response = 'Invalid name '+accumulator;
+	}
+} else {
+	response = 'Atmosphere OS is not yet live.';
+}
+%><%=response%>

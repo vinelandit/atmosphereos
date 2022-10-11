@@ -1,0 +1,168 @@
+<html>
+<head>
+	<title>AtmosphereOS Guest Access</title>
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+	<style>
+		html,body {
+			margin:0;
+			padding:0;
+			overflow:hidden;
+			text-align:center;
+			font-family:sans-serif;
+			background-color:#222222;
+			color:white;
+		}
+		h1#early {
+			padding-top:40vh;
+			font-size:30px;
+			line-height:35px;
+			padding-left:5%;
+			padding-right:5%;
+			color:white;
+			font-weight:normal;
+		}
+		.overlay {
+			width:100%;
+			height:100%;
+			top:0;
+			left:0;
+			display:fixed;
+
+		}
+		h1 {
+			margin-top:0;
+		}
+		.overlayInner {
+		  position: relative;
+		  top: 50%;
+		  transform: translateY(-50%);
+		}
+		#logoHolder {
+			margin-bottom:20px;
+		}
+		button {
+			border-radius:10px;
+			background-color:#333333;
+			color:white;
+			font-size:30px;
+			line-height:30px;
+			padding:15px;
+			padding-left:25px;
+			padding-right:25px;
+		}
+		button:hover {
+			background-color:#666666;
+		}
+		#mainContent {
+			display:none;
+			background-image:url(../img/nobodyspeakbg.jpg);
+			background-position:center;
+			background-size:cover;
+		}
+		#buttons {
+			width:20vh;
+			margin:0 auto;
+			margin-top:10vh;
+		}
+		#buttons a {
+			width:20vh;
+			height:20vh;
+			display:block;
+			background-color:#cc3333;
+			border-radius:50%;
+			margin-bottom:5vh;
+			box-shadow: inset 5px 5px 20px rgba(0,0,0,0.5);
+			border:2px solid white;
+
+		}
+		#buttons a#blue {
+			background-color:#3333cc;
+		}
+		#response {
+			position:absolute;
+			bottom:-10vh;
+			padding:15px;
+			border-top-left-radius:10px;
+			border-top-right-radius:10px;
+			width:80%;
+			font-size:20px;
+			background-color:rgba(0,0,0,0.25);
+			line-height:23px;
+			text-shadow:0 0 5px rgba(0,0,0,0.33);
+			margin-left:10%;
+			opacity:0;
+			transition: all 0.5s;
+		}
+		#response:not(:empty) {
+			opacity:1;
+			bottom:0px;
+		}
+	</style>
+</head>
+<body>
+
+
+
+<div class="overlay" id="mainContent">
+	<div class="overlayInner">
+		<h1>NOBODY SPEAK</h1>
+		<h2>Vote for your party</h2>
+		<div id="buttons">
+			<a data-party="a" id="avote" href="#"></a>
+			<a data-party="b" id="bvote" href="#"></a>
+		</div>
+	</div>
+	<div class="response" id="response"></div>
+</div>
+
+	
+<script src="../js/atmosGuest.js"></script>
+<script>
+	window.onload = function() {
+		project = false;
+		<% if(live.project) { %>
+		project = true;
+		<% } %>
+
+		var ag = new atmosGuest();
+		if(!project) {
+			document.body.innerHTML = "<h1 id='early'>You're too quick! ATM<strong>OS</strong>PHERE is not live yet. Reload this page later.</h1>";
+		} else {
+			// get initial user interaction to go full screen
+			document.body.innerHTML += "<div class='overlay' id='start'><div class='startContent overlayInner'><div id='logoHolder'><img src='../img/logo.png' alt='Logo' /></div><div id='startButtonHolder'><button id='startButton'>START</button></div></div>";
+			document.getElementById('startButton').addEventListener('click',function(){
+				ag.goFullScreen();
+				document.getElementById('start').style.display = 'none';
+				document.getElementById('mainContent').style.display = 'block';
+			});
+			var voted = false;
+			var responseEl = document.getElementById('response');
+			var al = document.getElementById('avote').addEventListener('click',function(){
+				if(!voted) {
+
+					ag.send('a',1,responseEl); // send a vote for red, then display the response in the #response element.
+					// document.getElementById('avote').removeEventListener('click',al);
+					// document.getElementById('bvote').removeEventListener('click',bl);
+					// voted = true;
+				}
+
+				return false;
+			});
+			var bl = document.getElementById('bvote').addEventListener('click',function(){
+				if(!voted) {
+
+					ag.send('b',1,responseEl); // send a vote for red, then display the response in the #response element.
+					// document.getElementById('avote').removeEventListener('click',al);
+					// document.getElementById('bvote').removeEventListener('click',bl);
+					// voted = true;
+				}
+
+				return false;
+			});	
+		}
+		
+	}
+</script>
+</body>
+
+</html>

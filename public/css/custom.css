@@ -1,0 +1,453 @@
+#movieCuesOverlay {
+  position:fixed;
+  left:0;
+  top:0;
+  right:0;
+  bottom:0;
+  display:none;
+  z-index:2000;
+}
+.moodoLabel {
+  display: block;
+  border-bottom: 5px solid #aaaaaa;
+  margin-top: 10px;
+}
+i.note {
+
+    font-size: 12px;
+    line-height: 15px !important;
+    display: block;
+    padding-top: 5px;
+    color: #999999;
+    background-color: #f5f5f5;
+    padding: 5px;
+    border-radius: 5px;
+    padding-left: 7px;
+    padding-right: 7px;
+    margin-top: 5px;
+    display:none;
+}
+.actionHolder {
+  width: 250px;
+  position: relative;
+}
+.actionHolder a {
+  width: 200px;
+  display: block;
+}
+.actionHolder a.delete-action {
+  position: absolute;
+  right: 20px;
+  top: 8px;
+  width: auto;
+}
+.actionHolder .delete-action {
+  float: right;
+}
+.vis-item.vis-range {
+  
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.33);
+}
+.vis-rolling-mode-btn {
+  display:none;
+}
+.disabled {
+  opacity:0.5;
+  pointer-events:none;
+}
+.conditionalBlock {
+  
+    width: 100%;
+    clear: both;
+}
+.btn-mute {
+  float:right;
+  padding-right:0;
+  visibility:hidden;
+}
+.muted {
+  background-color:#aaaaaa;
+}
+.nodal {
+    position: fixed;
+    bottom: 0;
+    z-index: 100000;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    display:none;
+}
+.nodal-header .closeLive {
+  float:right;
+}
+.nodal-header h5 {
+  float:left;
+  color:white;
+}
+.nodal-header {
+  background-color: #66dd66;
+    padding: 30px;
+    padding-top: 15px;
+    padding-bottom: 10px;
+}
+.nodal-body {
+  padding:30px;
+  padding-bottom:15px;
+}
+.nodal-body fieldset {
+  padding-bottom:15px;
+}
+.nodal-footer {
+  padding:30px;
+  padding-top:0;
+  padding-bottom:20px;
+}
+.nodal-footer p {
+
+    float: left;
+    width: 80%;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+.nodal-footer button {
+  float:right;
+}
+.donttouch {
+
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255,255,255,0.5);
+    z-index: 10000;
+}
+.vis-background {
+  overflow:visible !important;
+}
+.vis-timeline {
+  overflow:visible !important;
+}
+.vis-custom-time>.vis-custom-time-marker {
+  top:-14px !important;
+}
+.frameSync {
+  background-color:#6e94ff !important;
+  border-color:#6e94ff !important;
+  color:white !important;
+}
+.syncChild {
+
+    border-color: #33aa33 !important;
+    color: white !important;
+    background-color: #33aa33 !important;
+}
+.video-preview {
+
+    display: none;
+    margin-left: 0px;
+    margin-right: 0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    padding-bottom: 0;
+}
+.btn-frame-edit.btn-warning {
+  background-color:#6e94ff;
+}
+.video-preview video {
+  width:100%;
+}
+#defaultPlayer {
+  height:300px;
+}
+#hiddenVideo {
+  position:absolute;
+  right:1000%;
+  top:-1000%;
+  z-index:-1000;
+}
+.vis-labelset .vis-label .vis-inner {
+  display:block !important;
+}
+.btn-open-local,.btn-preroll-qr {
+  display:block;
+  float:right;
+  padding-bottom:0;
+  padding-left:5px;
+  padding-right:0;
+
+}
+.qr-off {
+  opacity: 0.5;
+}
+.qr-on {
+  opacity: 1.0;
+}
+.sidebar {
+  position:fixed;
+  z-index:11;
+}
+#content {
+  margin-left:6.5rem;
+  margin-right:200px;
+}
+.checkinForm,.cueboardForm,.accumulatorForm,.conditionalForm {
+  margin-bottom:10px;
+}
+.checkinForm .form-control,.cueboardForm .form-control,.conditionalForm .form-control {
+  max-width:130px;
+}
+.btn-checkinEventSettings .fa,
+.btn-cueboardItemSettings .fa {
+  transform:rotate(-45deg);
+}
+.mr {
+  margin-right:4px;
+}
+.ml {
+  margin-left:4px;
+}
+.mb {
+  margin-left:4px;
+  margin-right:4px;
+}
+.cueboardBadge {
+
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    font-size: 10px;
+    background-color: #339933;
+    height: 15px;
+    line-height: 15px;
+    min-width: 15px;
+    border-radius: 6px;
+    color: white;
+}
+.cueboardItem {
+    float: left;
+    width: 130px;
+    height: 130px;
+    background-color: white;
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    position: relative;
+    margin:10px;
+    box-shadow: inset 0 0 15px 5px rgba(0,0,0,0.1);
+    cursor:pointer;
+    overflow:hidden;
+    transition:all 0.25s;
+}
+.cueboardItem.down {
+  background-color:#ffcccc;
+  box-shadow:none;
+}
+
+.cueboardItem.used {
+  background-color:#eeffee;
+  box-shadow:none;
+}
+.cbKey {
+
+    font-size: 35px;
+    line-height: 35px;
+    margin-bottom: 5px;
+    color: #333333;
+    font-weight: bold;
+}
+.cbActionID {
+
+    font-size: 13px;
+    line-height: 14px;
+    margin-bottom: 2px;
+    max-height: 29px;
+    overflow: hidden;
+}
+.cbChannel {
+
+    font-size: 11px;
+    line-height: 12px;
+    max-height: 16px;
+    overflow: hidden;
+    background-color: #999999;
+    border-radius: 3px;
+    color: white;
+    text-transform: uppercase;
+    position: absolute;
+    bottom: 25px;
+    width: 90%;
+    left: 0;
+    margin-left: 5%;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.cbCurve {
+
+    width: 80%;
+    position: absolute;
+    bottom: 3px;
+    left: 10%;
+    border-top: 1px solid #dddddd;
+    border-left: 1px solid #dddddd;
+    border-right: 1px solid #dddddd;
+    height: 17px;
+    padding-top: 3px;
+    font-size: 10px;
+    line-height: 10px;
+    border-radius: 40%;
+}
+.cbFadeIn {
+
+    display: inline-block;
+    float: left;
+    margin-left: 5px;
+}
+.cbFadeOut {
+
+    display: inline-block;
+    float: right;
+    margin-right: 5px;
+}
+.cbDuration {
+  display:inline-block;
+}
+.live .navbar.bg-white {
+  background-color:rgba(50,180,50,1) !important;
+}
+
+.itemGroup {
+  display:none;
+}
+.sidebar.toggled .nav-item .collapse {
+  z-index:10 !important;
+}
+.vis-item {
+  border-radius:4px !important;
+}
+.vis-timeline {
+  border-radius:4px;
+}
+.vis-item .vis-delete {
+  z-index:1000 !important;
+}
+.items {
+  list-style-type:none;
+  margin:0;
+  padding:0;
+}
+.modal-xl {
+  max-width:95% !important;
+} 
+.project-name {
+
+    margin-left: 15px;
+    margin-top: 16px;
+}
+.item {
+  list-style-type:none;
+  border-radius:4px;
+  background-color:rgba(0,0,0,0.05);
+  border:1px solid #aaaaaa;
+  width:200px;
+  padding:8px;
+  padding-top:4px;
+  padding-bottom:4px;
+  margin-bottom:5px;
+  float:left;
+  margin-right:15px;
+}
+.sidebar .nav-item .nav-link .badge-counter {
+
+    top: 15px !important;
+    right: 38px !important;
+    font-size:0.75rem !important;
+}
+.editTimelineItem {
+    position: fixed;
+    right: 0;
+    top: 0;
+    background-color: white;
+    padding: 25px;
+    bottom: 0;
+    width: 200px;
+}
+
+.vis-item .vis-delete {
+  right:0 !important;
+}
+.formRow {
+  margin-top:15px;
+}
+.nudgeRow .formRow {
+  margin-top:5px;
+}
+.formRow label {
+
+    font-size: 13px;
+    text-transform: uppercase;
+    font-style: italic;
+    margin-bottom: 1px;
+    line-height: 15px;
+}
+.nav-item form {
+  padding:15px;
+  padding-top:0;
+  padding-bottom:10px;
+  width:300px;
+}
+#group-new-target {
+  margin-bottom:20px;
+}
+#targetsForm .input-group {
+  margin-top:-1px;
+}
+#colourTester {
+  padding:15px;
+  z-index:99;
+  padding-top:10px;
+  padding-bottom:10px;
+}
+#colourTester span {
+  display:inline-block;
+  position:relative;
+}
+#colourTester div {
+  display:inline-block;
+  margin-left:0px;
+  margin-right:7px;
+  width:20px;
+  height:20px;
+  border-radius:5px;
+  margin-bottom:5px;
+  background-color:#aaaaaa;
+}
+.form-control-sm .input-group-text {
+  line-height:1.35;
+}
+fieldset {
+  padding:15px;
+  background-color:#f5f5f5;
+  border-radius:5px;
+  margin-bottom:15px;
+  padding-bottom:0;
+}
+fieldset label {
+  margin-bottom:2px;
+  font-size:11px;
+}
+legend {
+  background-color:#cccccc;
+  color:white;
+  display:inline-block;
+  width:auto;
+  padding:7px;
+  padding-top:4px;
+  padding-bottom:4px;
+  margin-left:-7px;
+  font-size:13px;
+  border-radius:5px;
+  margin-bottom:0;
+  font-style:italic;
+  text-transform:uppercase;
+}

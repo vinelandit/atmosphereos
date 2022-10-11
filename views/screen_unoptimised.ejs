@@ -1,0 +1,1159 @@
+<html>
+<head>
+	<title>Please activate me</title>
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+	<style>
+		html,body {
+			margin:0;
+			padding:0;
+			overflow:hidden;
+			text-align:center;
+			font-family:sans-serif;
+		}
+		
+		body.active {
+			background-color:black;
+		}
+		iframe {
+			margin:0;
+			padding:0;
+		}
+		#note {
+			padding: 15px;
+			font-size: 15px;
+			line-height: 18px;
+			color: white;
+		}
+
+			.action {
+				position:absolute;
+				left:0;
+				top:0;
+				width:100%;
+				height:100%;
+				z-index:100;
+				display:none;
+				background-size:cover;
+				background-position:center;
+			}
+			.text {
+				  position: relative;
+				  top: 50%;
+				  transform: translateY(-50%);
+			}
+			.text h1 {
+				margin:0;
+				padding:0;
+				text-align:center;
+				padding-left:6vw;
+				padding-right:6vw;
+				font-size:10vw;
+				line-height:12vw;
+				text-transform:uppercase;
+			}
+			.text p {
+				padding:0;
+				margin:0;
+				padding-left:6vw;
+				padding-right:6vw;
+				padding-top:1vw;
+				font-size:6vw;
+				line-height:8vw;
+			}
+			p#connected {
+				display:none;
+			}
+			p.highlight {
+				color:#990000;
+			}
+			form {
+				z-index:101;
+				clear:both;
+				width:100%;
+				display:block;
+			}
+			input {
+				display:block;
+				margin:0 auto;
+			}
+
+			#actionFlash {
+				background-color:white;
+				z-index:100000;
+				display:none;
+			}
+			#keepalive {
+				position:fixed;
+				bottom:-1px;
+				left:-1px;
+				border-radius:1px;
+				background-color:black;
+				width:2px;
+				height:2px;
+			}
+			#keepalive.keepalive {
+				background-color:#010101;
+			}
+			#changeID {
+				position: absolute;
+			    top: 0;
+			    /* transform: translateY(-50%); */
+			    /* margin-bottom: 0; */
+			    background-color: rgba(0,0,0,0.9);
+			    left: 0;
+			    bottom: 0;
+			}
+			#changeID p {
+				margin:0;
+				padding:0;
+			}
+			#aliasHeading {
+				font-size:4vw;
+				padding-bottom:1vw;
+			}
+			#aliasP {
+				border-top:2px solid #dddddd;
+				display:inline-block;
+				font-size:7vw;
+				text-transform:uppercase;
+				clear:both;
+			}
+			input {
+				border-radius:1vw;
+				font-size:5vw;
+				border:1px solid #999999;
+				margin-top:5vw;
+			}
+			button {
+				background-color:rgb(250,250,00);
+				font-size:4vw;
+				padding:1.5vw;
+				border-radius:1vw;
+				cursor:pointer;
+				margin-top:2vw;
+				border:1px solid #999999;
+			}
+			video {
+				width:100%;
+				height:auto;
+
+				  position: relative;
+				  top: 50%;
+				  transform: translateY(-50%);
+			}
+			select {
+				font-size:4.5vw;
+				display:inline-block;
+				margin-top:1vh;
+			}
+			#overlay {
+				position:fixed;
+				width:100%;
+				height:100%;
+				left:0;
+				top:0;
+				z-index:2000000;
+				background-color:rgba(0,0,0,0.999);
+			}
+			#status {
+				padding:5%;
+				color:#33dd33;
+				font-size:2vw;
+				line-height:2.75vw;
+				width:auto;
+				text-align:left;
+			}
+	</style>
+</head>
+<body>
+	<div class="video-holder">
+		VIDEO GOES HERE...
+	</div>
+	<div class="action" id="actionFLASH" data-id="FLASH" data-duration="3" data-fade-in="0" data-fade-out="0.5">
+		<div class="text">
+			<h1 class="alias"></h1>
+			<p>ATM<strong>OS</strong>PHERE SCREEN</p>
+		</div>
+	</div>
+	<div id="overlay">
+		<div id="note">ATM<strong>OS</strong>PHERE is now ready on this device. Please do not turn off the screen.</div>
+		<!-- <video src="video/helicopterA5.mp4" style="z-index: 1000000; position:absolute; left: 0 ;top:400px" id="blankVideo" width="200" height="100" preload="auto" playsinline> -->
+		</video>
+<iframe id="qrIframe" frameBorder="0" style="display: none;border: none;position: absolute;width: 100%;height: 100%;left:0;top:0" src="/qr" ></iframe>
+		<div id="status"></div>
+		<form id="changeID" name="changeID">
+			<% if(alias=='') { %><p id="aliasHeading" onclick="location.reload()">Choose target</p>
+			<select name="selectAlias" id="selectAlias">
+				<%- aliasOptions %>
+			</select>
+			<% } %>
+			<p><button data-aliasDataQR="<%= aliasDataQR %>" id="activate">ACTIVATE NOW</button></p>
+		</form>
+		
+	
+
+	</div>
+	<div id="actionsContainer">
+	</div>
+	<% if(alias!='') { %>
+		<div id="keepalive"></div>
+	<% } %>		
+	
+		<script src="/vendor/jquery/jquery.min.js"></script>
+		<script src="/js/preload.min.js"></script>
+
+		<script src="/js/VideoFrame.min.js"></script>
+		<script src="/js/colourHelpers.js"></script>
+  		<% include partials/wshelpers %>
+		<script src="/js/NoSleep.min.js"></script>
+		<script>
+
+
+			Object.defineProperty(HTMLVideoElement.prototype, 'playing', {
+			    get: function(){
+			        return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
+			    }
+			})
+
+			var blobs = {};
+
+			var prevData = null;
+
+			myQR = false;
+			mutedChannels = {};
+			
+			function htmlDecode(input){
+			
+			  var e = document.createElement('textarea');
+			  e.innerHTML = input;
+			  // handle case of empty input
+			  return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+
+			}
+
+			function isMobile() {
+			
+				return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+			
+			}
+
+			function playVideo(actionID,itemID,isMuted) {
+				
+				if(typeof isMuted==='undefined') isMuted = false;
+				
+				var jVideo = $('.action[data-id="'+actionID+'"]').find('video');
+				var video = jVideo[0];
+				console.log('playing video: ');
+				console.log(video);
+				if(typeof vid !== 'undefined') {
+					vid.stopListen();
+				}
+
+				console.log('Checking for sync events for '+itemID);
+				// check for frame sync events
+				if(typeof mySyncEvents !== 'undefined' && mySyncEvents!='none' && typeof mySyncEvents[itemID]!=='undefined') {
+
+
+					jVideo.attr('id','activeVideo');
+
+					console.log('Found sync events for '+itemID);
+					// there are some sync events, put them in the right place
+					liveSyncList = [];
+					for (var key in mySyncEvents[itemID]) {
+						liveSyncList.push(mySyncEvents[itemID][key]);
+					}
+					console.log(liveSyncList);
+					
+					// sort out Hue device race conditions
+					
+					var hueCheck = {};
+					for(var i in liveSyncList) {
+						var startTime = liveSyncList[i].time;
+						for (var a in liveSyncList[i].actions) {
+							if(liveSyncList[i].actions[a].actionID.indexOf('Hue ')==0) {
+								// hue event
+								if(typeof hueCheck[liveSyncList[i].actions[a].to] == 'undefined') {
+									hueCheck[liveSyncList[i].actions[a].to] = {};
+								}
+								if(typeof hueCheck[liveSyncList[i].actions[a].to][i] == 'undefined') {
+									hueCheck[liveSyncList[i].actions[a].to][i] = [];
+								}
+								var temp = [];
+								var endTime = startTime+(liveSyncList[i].actions[a].duration*1000);
+								temp['startTime'] = startTime;
+								temp['endTime'] = endTime;
+								temp['originalIndex'] = a;
+
+								hueCheck[liveSyncList[i].actions[a].to][i].push(temp);
+							}
+						}
+					}
+					console.log(hueCheck);
+					for (var channel in hueCheck) {
+						var myKeys = Object.keys(hueCheck[channel]);
+						var myCount = myKeys.length;
+						var index = 0;
+						for(var i in hueCheck[channel]) {
+							
+
+
+							for(var j in hueCheck[channel][i]) {
+								var firstEnd = hueCheck[channel][i][j].endTime;
+								var firstStart = hueCheck[channel][i][j].startTime;
+							}
+							var next = myKeys[index+1];
+							console.log(next);
+							if(typeof hueCheck[channel][next]!=='undefined') {
+								var myActionName = '';
+								for(var j in hueCheck[channel][next]) {
+									myActionName = j;
+								}
+								var secondStart = hueCheck[channel][next][myActionName].startTime;
+								var secondEnd = hueCheck[channel][next][myActionName].endTime;
+								console.log('Comparing '+firstEnd+' to '+secondStart);
+								if(secondStart!=firstEnd) {
+									// flag left abutting event not to turn device off
+									// flag right abutting event not to turn device on
+									
+									for(repatch in liveSyncList[i].actions) {
+
+										console.log('Comparing '+channel+' and '+liveSyncList[i].actions[repatch].to);
+										if(liveSyncList[i].actions[repatch].to==channel) {
+											liveSyncList[i].actions[repatch].turnOff = true;
+											console.log('Just set this item to turn off: ');
+											console.log(liveSyncList[i].actions[repatch]);
+										}
+									}
+									
+								}
+							}
+
+							if(index>=myCount-1) {
+								// last one needs to be turned off always
+								for(repatch in liveSyncList[i].actions) {
+
+									console.log('Comparing last '+channel+' and '+liveSyncList[i].actions[repatch].to);
+									if(liveSyncList[i].actions[repatch].to==channel) {
+
+										console.log('Just set LAST item to turn off: '+channel);
+										console.log(liveSyncList[i].actions[repatch]);
+										liveSyncList[i].actions[repatch].turnOff = true;
+									} 
+								} 
+							}
+							index++;
+						}
+					}
+					console.log('Finished Hue race condition processing.');
+					console.log(liveSyncList); 
+					var initHue = true;
+					vid = VideoFrame({
+						id : 'activeVideo',
+						frameRate: 24,
+						callback : function(response) {
+
+							if(liveSyncList.length>0 && vid.toMilliseconds(response)>=liveSyncList[0].time) {	
+								var sendList = [];
+								for(i in liveSyncList[0].actions) {
+
+									liveSyncList[0].actions[i].command = "action";
+									liveSyncList[0].actions[i].senderAlias = myID;
+									if(liveSyncList[0].actions[i].actionID.toLowerCase().indexOf('hue ')==0) {
+										liveSyncList[0].actions[i].command = 'sendHue';
+										liveSyncList[0].actions[i].target = liveSyncList[0].actions[i].to;
+										liveSyncList[0].actions[i].to = 'SERVER';
+										if(initHue) {
+											var body = {
+											"on":true
+											};
+										} else {
+											var body = {};
+										}
+										if(typeof liveSyncList[0].actions[i].dontTurnOn !== 'undefined' &&
+												  liveSyncList[0].actions[i].dontTurnOn) {
+											console.log('Not turning on this Hue event');
+											delete body.on;
+										} 
+										if(liveSyncList[0].actions[i].actionID=='Hue colour') {
+											var rgb = hex2rgb(liveSyncList[0].actions[i].color);
+											var hsv = rgb2hsv(rgb.r,rgb.g,rgb.b);
+											body.hue = hsv[0];
+											body.sat = hsv[1];
+											body.bri = hsv[2];
+											body.transitiontime = liveSyncList[0].actions[i].fadeIn * 10
+										}
+						                
+										liveSyncList[0].actions[i].hueCommand = body;
+							    		// connection.send(JSON.stringify(liveSyncList[0].actions[i]));
+							    		sendList.push(liveSyncList[0].actions[i]);
+							    		
+							    		if(typeof liveSyncList[0].actions[i].leaveOn !== 'undefined' &&
+												  liveSyncList[0].actions[i].leaveOn) {
+											var myLeaveOn = true;
+										} else {
+											var myLeaveOn = false;
+										}
+							    		var hTarget = liveSyncList[0].actions[i].target;
+							    		var hFO = liveSyncList[0].actions[i].fadeOut;
+							    		var hSelf = [hTarget,hFO,myLeaveOn];
+							    		if(typeof liveSyncList[0].actions[i].turnOff !== 'undefined') {
+							    			window.setTimeout(function(mySelf){
+
+							    				var bodyOff = {								    			
+									                "on":false,
+									                "bri":0,
+									                "transitiontime":mySelf[1]*10
+								    			}
+								    			if(hSelf[2]) {
+								    				console.log('Not turning on this Hue event');
+								    				delete bodyOff.on;
+								    				console.log(bodyOff);
+								    			}
+								    			var msg = {
+								    				"command":"sendHue",
+								    				"target":mySelf[0],
+								    				"to":"SERVER",
+								    				"senderAlias":myID,
+								    				"hueCommand":bodyOff
+								    			}
+								    			console.log('Turning off frame sync-triggered hue action...');
+								    			console.log(msg);
+								    			connection.send(JSON.stringify(msg));
+								    			
+								    		}.bind(this,hSelf),(liveSyncList[0].actions[i].duration-liveSyncList[0].actions[i].fadeOut)*1000); 
+								    	}
+
+									} else if(liveSyncList[0].actions[i].actionID.toLowerCase().indexOf('moodo')==0) {
+										liveSyncList[0].actions[i].command = 'sendMoodo';
+										liveSyncList[0].actions[i].target = liveSyncList[0].actions[i].to;
+										liveSyncList[0].actions[i].to = 'SERVER';
+										
+										var body = {
+											'slot0':liveSyncList[0].actions[i].moodoSlot0,
+											'slot1':liveSyncList[0].actions[i].moodoSlot1,
+											'slot2':liveSyncList[0].actions[i].moodoSlot2,
+											'slot3':liveSyncList[0].actions[i].moodoSlot3
+
+										};
+										
+										liveSyncList[0].actions[i].moodoCommand = body;
+							    		// connection.send(JSON.stringify(liveSyncList[0].actions[i]));
+							    		sendList.push(liveSyncList[0].actions[i]);
+
+							    		var myTarget = liveSyncList[0].actions[i].target;
+							    				
+						    			window.setTimeout(function(target){
+
+							    			var bodyOff = {
+												'slot0':0,
+												'slot1':0,
+												'slot2':0,
+												'slot3':0
+
+											};
+							    			console.log('Turning off frame sync-triggered moodo action...');
+							    			console.log(msg);
+							    			var msg = {
+							    				"command":"sendMoodo",
+							    				"target":target,
+							    				"to":"SERVER",
+							    				"senderAlias":myID,
+							    				"moodoCommand":bodyOff
+							    			}
+							    			connection.send(JSON.stringify(msg));
+							    			
+							    		}.bind(this,myTarget),(liveSyncList[0].actions[i].duration)*1000); 
+								    	
+
+									} else {
+							    		// connection.send(JSON.stringify(liveSyncList[0].actions[i]));
+							    		sendList.push(liveSyncList[0].actions[i]);
+							    		
+									}
+								}
+								
+								// send the stuff
+								console.log('Sending batch... ');
+								console.log(JSON.stringify(sendList));
+								connection.send(JSON.stringify(sendList));
+
+								// now remove this from the sync list
+					    		liveSyncList.shift();
+					    		if(liveSyncList.length==0 && typeof vid !== 'undefined') {
+									vid.stopListen();
+									console.log('End of frame sync events for this video.');
+								}
+							} else {
+								if(liveSyncList.length==0 && typeof vid !== 'undefined') {
+									vid.stopListen();
+								}
+							}
+						}
+						});
+					vid.listen('SMPTE');
+				}
+				
+				video.muted = isMuted;
+				// video.currentTime = 0;
+				console.log('TRYING TO PLAY '+Date.now());
+				video.play();
+			}
+			function stopVideo(actionID) {
+				if(typeof vid !== 'undefined') {
+					vid.stopListen();
+				}
+				var jVideo = $('.action[data-id="'+actionID+'"]').find('video');
+				var video = jVideo[0];
+				console.log('stopping video: ');
+				console.log(video);
+				// if(video.playing) {
+					video.pause();
+				// }
+				video.currentTime = 0;
+				jVideo.attr('id','');
+			}
+
+			function getCookie(cname) {
+			  var name = cname + "=";
+			  var decodedCookie = decodeURIComponent(document.cookie);
+			  var ca = decodedCookie.split(';');
+			  for(var i = 0; i <ca.length; i++) {
+			    var c = ca[i];
+			    while (c.charAt(0) == ' ') {
+			      c = c.substring(1);
+			    }
+			    if (c.indexOf(name) == 0) {
+			      return c.substring(name.length, c.length);
+			    }
+			  }
+			  return "";
+			}
+			function setCookie(cname, cvalue, exdays) {
+			  var d = new Date();
+			  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+			  var expires = "expires="+ d.toUTCString();
+			  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+			}
+
+			// check for stored ID
+			<% if(alias!='') { %>
+			myID = '<%= alias %>';	
+			console.log('prick');	
+			window.setInterval(function(){
+				$('#keepalive').toggleClass('keepalive');
+			},5000);
+			<% } else { %>	
+			myID = getCookie('atmosID');
+			<% } %>
+
+
+			$(document).ready(function(){
+
+
+				
+
+				<% if(alias!='') { %> activate(); <% } %>
+				document.addEventListener("fullscreenchange", onFullScreenChange, false);
+				document.addEventListener("webkitfullscreenchange", onFullScreenChange, false);
+				document.addEventListener("mozfullscreenchange", onFullScreenChange, false);
+
+
+
+				function onFullScreenChange() {
+				  var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
+
+				  if(fullscreenElement==null) {
+				  	// out of fullscren
+				  	// status = 'active';
+
+					$('#changeID').show();
+					$('body').removeClass('active');
+					// status = 'ready';
+				  }
+				}
+				customCSSBlocks = [];
+				customJSBlocks = [];
+
+				status = 'active';
+				function showAction(id,duration,fadeIn,fadeOut,itemID,mergeData) {
+					$('#overlay').hide();
+
+					var fi = fadeIn;
+					var fo = fadeOut;
+
+					if(isNaN(fi)) fi = 0;
+					if(isNaN(fo)) fo = 0;
+
+					if(typeof actionTimeout !== 'undefined') {
+						console.log('Clearing timeout');
+						window.clearTimeout(actionTimeout);
+					}
+					if(id=='Screen off') {
+						// just turn off all media
+						console.log('Turning everything off with fade of '+fo);
+						$('.action').each(function(){
+							if(fo==0) {
+								$(this).hide();
+								if($(this).attr('data-type')=='video') {
+									stopVideo($(this).attr('data-id'));
+								}
+								$(this).find('#customCSS').remove();
+							} else {
+								$(this).fadeOut(fo,function(){
+
+									if($(this).attr('data-type')=='video') {
+										stopVideo($(this).attr('data-id'));
+									}
+									$(this).find('#customCSS').remove();
+								});
+							}
+							
+						});
+						return true;
+					} 
+					// hide other panels
+					$('.action[data-id!="'+id+'"]').hide().each(function(){
+						if($(this).attr('data-type')=='video') {
+							stopVideo($(this).attr('data-id'));
+						}
+						$(this).find('#customCSS').remove();
+					});
+
+					var a = $('.action[data-id="'+id+'"]');
+
+					var t = a.attr('data-type');
+					// get meta-data
+					if(typeof mergeData !== 'undefined') {
+						// merge placeholders
+						a.find('.merge').each(function(){
+							var myName = $(this).attr('data-replace');
+							if(typeof mergeData[myName] !== 'undefined') {
+								$(this).html(mergeData[myName]);
+							}
+						});
+					}
+
+					// check for custom css/js
+					var customCSS = a.find('.customCSS').html();
+					var customJS = a.find('.customJS').html();
+					if(customCSS!='') {
+						a.append('<style id="customCSS">'+customCSS+'</style>');
+					}
+					if(customJS!='') {
+						console.log(customJS);
+						eval(htmlDecode(customJS));
+					}
+
+					if(id=='FLASH') {
+						a.show();
+					}
+
+					var d = duration;
+					var latch = false;
+					if(parseFloat(d)==0) {
+						latch = true;
+					}
+					// show action
+					
+					a.fadeIn(fi*1000);1
+
+					d = d-fo;
+
+					if(t=='video') {
+						if(typeof itemID=='undefined') {
+							itemID = 'none';
+						}
+						// play video
+						console.log('Playing VIDEO for '+id+' / '+itemID);
+						playVideo(id,itemID);
+					}
+					if(latch) {
+						console.log('Playing '+id+' until further notice.');
+					} else {
+
+							console.log('Playing '+id+' for '+d+' seconds');
+					}
+
+
+					if(!latch) {
+						actionTimeout = window.setTimeout(function(){
+							
+							a.fadeOut(fo*1000,function(){
+								if(a.attr('data-type')=='video') stopVideo(a.attr('data-id'));
+
+							});
+							
+							var id = a.attr('data-id');
+							console.log('Hiding '+id);
+
+
+							if(status!='live') {
+								
+								$('#overlay').show();
+							}
+							
+
+						},(d*1000)+50,a); 
+					}
+				}
+
+				function openFullscreen() {
+					var elem = document.documentElement;
+				  if (elem.requestFullscreen) {
+				    elem.requestFullscreen();
+				  } else if (elem.mozRequestFullScreen) { /* Firefox */
+				    elem.mozRequestFullScreen();
+				  } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+				    elem.webkitRequestFullscreen();
+				  } else if (elem.msRequestFullscreen) { /* IE/Edge */
+				    elem.msRequestFullscreen();
+				  }
+				}
+
+
+
+
+				
+
+
+
+					
+
+				$('#btnChange').click(function(e){
+					e.preventDefault();
+					var newID = $('#newID').val().trim();
+					if(newID!='') {
+						// send request
+						var data = {
+							"senderAlias" : myID,
+							"to" : "SERVER",
+							"command" : "change_alias",
+							"new_alias" : newID
+						};
+						$(this).prop('disabled',true);
+
+						connection.send(JSON.stringify(data));
+					}
+
+				});
+
+
+
+
+				function preloadAllLocal() {
+					i = 0;
+					totalWaitTime = 0;
+					$('#overlay').fadeIn('fast');
+					$('#status').html('Initialising...<br/>');
+					$('#actionsContainer .action').each(function(index){
+						var id = $(this).attr('data-id');
+						var _this = $(this);
+						var _index = index;
+						if(_this.attr('data-type')=='video') {
+							var waitTime = 4000;
+						} else {
+							var waitTime = 600;
+						}
+						totalWaitTime+=waitTime;
+						window.setTimeout(function(){
+							console.log(id);
+							var prev = _index - 1;
+							if(prev>=0 && $('#actionsContainer .action:eq('+prev+')').attr('data-type')=='video') {
+								// check and stop previous video playing
+								var t = $('#actionsContainer .action:eq('+prev+') video')[0].currentTime;
+								var prevID = $('#actionsContainer .action:eq('+prev+')').attr('data-id');
+								if(t==0) {
+									$('#status').append('WARNING: video action "'+prevID+'" did not start playing after 5 seconds.<br/>');
+								} else {
+									$('#status').append('Video action "'+prevID+'" initialised with '+t+' seconds of playback.<br/>');
+								}
+								stopVideo(prevID);
+							}
+							$('#status').append('Preparing action "'+id+'"...<br/>');
+							$('#status').append('')
+							$('.action').hide();
+							_this.show();
+							if(_this.attr('data-type')=='video') {
+								playVideo(id,'none',true);
+							}
+
+							
+						},totalWaitTime-1000);
+						i++;
+					});
+
+					window.setTimeout(function(){
+
+						var prev = i-1;
+						if(prev>=0 && $('#actionsContainer .action:eq('+prev+')').attr('data-type')=='video') {
+							// check and stop previous video playing
+							var t = $('#actionsContainer .action:eq('+prev+') video')[0].currentTime;
+							var prevID = $('#actionsContainer .action:eq('+prev+')').attr('data-id');
+							if(t==0) {
+								$('#status').append('WARNING: video action "'+prevID+'" did not start playing after 4 seconds.<br/>');
+							} else {
+								$('#status').append('Video action "'+prevID+'" initialised with '+t+' seconds of playback.<br/>');
+							}
+							stopVideo(prevID);
+						}
+
+
+						initComplete();
+					},totalWaitTime+1000);
+
+				}
+				function preloadImage(url) {
+					var img=new Image();
+    				img.src=url;
+				}
+
+				function preloadAll() {
+					i = 0;
+					totalWaitTime = 0;
+					$('#overlay').fadeIn('fast');
+					$('#status').html('Initialising...<br/>');
+
+					var manifest = [];
+
+					$('#actionsContainer .action').each(function(index){
+						var id = $(this).attr('data-id');
+
+						var _this = $(this);
+						var _index = index;
+						$('#status').append('Preparing action "'+id+'"... <span class="blobProgress"></span>');
+						
+
+						if(_this.attr('data-type')=='video') {
+							// only add to manifest if it hasn't already been blobbed
+							if(!blobs[id]) {
+								manifest.push({'id':id, 'src' : $(this).find('video').attr('src'), 'type' : createjs.AbstractLoader.BINARY});
+							} else {
+								$('#status').append(' (video already loaded)');
+								$(this).find('video').attr('src',blobs[id]);
+							}
+							
+						} else {
+							// search for assets to preload
+							var imURL = $(this).css('background-image').replace(/^url\(['"](.+)['"]\)/, '$1');
+							// vanilla-preload image
+							preloadImage(imURL);
+						}
+						$('#status').append('<br/>');
+
+					});
+
+					if(manifest.length>0) {
+						// create queue
+						var queue = new createjs.LoadQueue();
+						var videosTarget = null;
+
+						queue.on("complete", handleComplete, this);
+
+						// create manifest for files to load
+						queue.loadManifest(manifest);
+
+						// handle  & show progress
+						queue.on("progress", function(evt){
+						  var p = queue.progress * 100;
+						  $('.blobProgress').text('Progress: '+parseInt(p)+'%');
+						});
+
+						// insert after load
+						function handleComplete() {
+							console.log('done downloading videos');
+				      		for(var i in manifest) {
+
+								console.log('Updating source URL for action '+manifest[i].id);
+				      			
+								if(manifest[i].type==createjs.AbstractLoader.BINARY) {
+									var src = queue.getResult(manifest[i].id);
+					      			var vidEl = $('.action[data-id="'+manifest[i].id+'"] video');
+									var blob = new Blob( [ src ], { type: "video/mp4" } );
+									var urlCreator = window.URL || window.webkitURL;
+									var objUrl = urlCreator.createObjectURL( blob );
+									vidEl.attr('src', objUrl);
+									blobs[manifest[i].id] = objUrl; // store for use again
+								} 
+				      			
+				      		}
+				      		initComplete();
+							
+						}
+					} else {
+						// no videos to preload; done
+						initComplete();
+					}
+
+					
+
+					
+
+				}
+				function initComplete() {
+					$('#status').append('Initialisation complete.');
+					$('.action').hide();
+					window.setTimeout(function(){
+						$('#overlay').fadeOut('fast',function(){
+							
+							$('#status').html('');
+						});
+					},500);
+					// to do: send notification back to master
+				}
+				$('#activate').click(function(e){
+					// play blank movie on click event to acquire user permission for subsequent plays
+					// $("#blankVideo")[0].play();
+					e.preventDefault();
+					activate();
+				});
+				$('body').keyup(function(e) {
+				    e.preventDefault();
+					activate();
+				});
+
+				
+
+
+				function activate() {
+
+					if($('#selectAlias').val()!='') {
+						
+						var o = $('#selectAlias').find(":selected");
+						
+						if(o.attr('data-qr')=='true'||$('#activate').attr('data-aliasDataQR')=='true') {
+							myQR = true;
+							$('#qrIframe').show();
+						} else {
+							myQR = false;
+							$('#qrIframe').hide();
+						}
+
+						$('.alias').html(<% if (alias=='') { %>$('#selectAlias').val()<% } else { %>myID<% } %>);
+						
+						document.title = $('.alias').html()+' - ATMOSPHERE screen';
+						console.log('Starting socket');
+
+						
+						startSocket();
+						console.log('Started socket.');
+
+						openFullscreen();
+
+					  	// in fullscreen
+					  	status = 'active';
+					  	$('#changeID').hide();
+						$('body').addClass('active');
+
+					  
+						// Enable wake lock but NOT on local devices
+						// todo: disable this on desktop devices, where it
+						// appears to be a resource hog
+						<% if (alias=='') { %>
+						if(isMobile()) {
+							noSleep = new NoSleep();
+							console.log('enabling NoSleep...');
+							noSleep.enable();
+						}
+						<% } %>
+
+					}
+
+
+
+				};
+
+				
+				var dataQR = "false";
+				if(typeof targets !== 'undefined') {
+					for(var i=0;i<targets.length;i++) {
+						if(targets[i].id==myID) {
+							dataQR = true;
+							break;
+						}
+					}
+				} 
+
+				if(myID!==null&&myID!='') {
+					if(!$('#selectAlias [value="'+myID+'"]').length) {
+						$('#selectAlias').html('<option value="'+myID+'" data-qr="'+dataQR+'">'+myID+'</option>'+$('#selectAlias').html());
+					}
+					$('#selectAlias').val(myID);
+
+				}
+
+				lastPing = Date.now();
+				
+				function startSocket() {
+
+
+			      <% if (alias=='') { %>
+			      	setCookie('atmosID',$('#selectAlias').val(),10000);
+				 	 myID = $('#selectAlias').val();
+			      <% } %>
+				  status = 'active';	
+				  FS = false;
+
+				  window.WebSocket = window.WebSocket || window.MozWebSocket;
+				  // if browser doesn't support WebSocket, just show
+				  // some notification and exit
+				  if (!window.WebSocket) {
+				    alert('Your browser does not support WebSockets. Please use an up-to-date browser such as Chrome, Firefox, Safari or Opera.');
+				    
+				    return;
+				  }
+				  // open connection
+				  const socketProtocol = (window.location.protocol === 'https:' ? 'wss:' : 'ws:')
+				  const echoSocketUrl = socketProtocol + '//' + window.location.hostname + ':1337/?alias='+<% if(alias=='') { %>$('#selectAlias').val()<% } else { %>myID<% } %>;
+				  console.log(echoSocketUrl);
+				  connection = new WebSocket(echoSocketUrl);
+				  connection.onopen = function () {
+				    // first we want users to enter their names
+				    console.log('connection made.');
+				    console.log(connection);
+				    $('#waiting').hide();
+				    $('#connected').show();
+				    
+				    window.setInterval(function(){
+				    	sendHeartbeat(connection,myID,status);
+				    },5000);
+				  };
+				  connection.onerror = function (error) {
+				    // just in case there were some problems with connection...
+				    console.log('Sorry, but there\'s some problem with your connection or the server is down.');
+				  };
+
+				  // most important part - incoming messages
+				  connection.onmessage = function (message) {
+				    // try to parse JSON message. Because we know that the server
+				    // always returns JSON this should work without any problem but
+				    // we should make sure that the massage is not chunked or
+				    // otherwise damaged.
+				    var data = JSON.parse(message.data);
+				    console.log(data);
+				    if(data.command=='accumulator') {
+				    	// accumulator value updated, refresh relevant elements
+				    	if(data.name!=''&&data.value!='') {
+				    		$('.accumulator[data-name="'+data.name+'"]').html(data.value);
+				    	}
+				    } else if(data.command=='ping') {
+				    	lastPing = Date.now();
+				    	console.log('PING: '+lastPing);
+				    } else if (data.command=='new_alias_result') {
+			    		
+			    		if(data.result=='SUCCESS') {
+			    			// update cookie and display
+			    			myID = data.to;
+			    			setCookie('atmosID',myID,10000);
+			    			$('#currentID').html(data.to);
+
+							$('.alias').html(data.to);
+			    			$('#btnChange').prop('disabled',false);
+			    			
+			    			$('#newID').val('');
+			    		} else {
+			    			alert(data.info);
+			    		}
+			    	} else if(data.command=='action') {
+			    		if(typeof data.itemID === 'undefined') {
+			    			data.itemID = 'none';
+			    		}
+			    		var actionID = data.actionID;
+			    		showAction(data.actionID,data.duration,data.fadeIn,data.fadeOut,data.itemID,data.mergeData);
+			    	} else if (data.command=='testAction') {
+
+			    		// $('#blankVideo').attr('src','video/Blue_edit_5.mp4');
+			    		// $("#blankVideo")[0].play();
+			    		
+			    		data.itemID = 'testAction';
+			    		if(typeof actionTimeout !== 'undefined') {
+			    			window.clearTimeout(actionTimeout);
+			    		}
+			    		$('#actionsContainer').html(data.actionHTML);
+			    		if(data.fontFaces!='') {
+			    			var style = document.createElement('style');
+							style.type = 'text/css';
+							style.innerHTML = data.fontFaces;
+							document.getElementsByTagName('head')[0].appendChild(style);
+			    		}
+			    		
+			    		showAction(data.actionID,data.duration,data.fadeIn,data.fadeOut,data.itemID,data.mergeData);
+
+			    	} else if (data.command=='goLive') {
+			    		// location.reload();
+			    		
+			    		if(prevData==data.html) {
+			    			console.log('actions duplicate');
+			    			initComplete();
+			    		} else {
+			    			console.log('new actions');
+			    			$('#actionsContainer').html(data.html);
+			    			prevData = data.html;
+			    			<% if (alias=='') { %>
+				    		// preload assets, but only on remote devices
+				    		preloadAllLocal(); // should be preloadAll() which loads videos into memory blobs for instant replay, but that crashes older/low-memory devices :(
+				    		<% } else { %>
+				    		preloadAllLocal();
+				    		<% } %>
+			    		}
+			    		
+			    		
+			    		mySyncEvents = data.syncEvents;
+
+			    		console.log('LIVE!');
+			    		
+			    		/* $('.action').hide();
+						$('.action[data-type="video"]').each(function(){
+							stopVideo($(this).attr('data-id'));
+						}); */
+			    		status = 'live';
+			    		if(typeof actionTimeout !== 'undefined') {
+			    			window.clearTimeout(actionTimeout);
+			    		}
+
+			    		if(data.fontFaces!='') {
+			    			var style = document.createElement('style');
+							style.type = 'text/css';
+							style.innerHTML = data.fontFaces;
+							document.getElementsByTagName('head')[0].appendChild(style);
+			    		}
+			    	} else if (data.command=='haltLive') {
+			    		status = 'active';
+			    		$('.action').hide();
+						$('.action[data-type="video"]').each(function(){
+							stopVideo($(this).attr('data-id'));
+						});
+						
+						// $('#actionsContainer').html(''); 
+						$('#overlay').show();
+			    		console.log('Live mode halted.');
+			    		if(typeof actionTimeout !== 'undefined') {
+			    			window.clearTimeout(actionTimeout);
+			    		}
+			    	}
+				    
+				    
+				  };
+
+				  /**
+				   * This method is optional. If the server wasn't able to
+				   * respond to the in 3 seconds then show some error message 
+				   * to notify the user that something is wrong.
+				   */
+				  if(typeof sentry !== 'undefined') {
+				  	window.clearInterval(sentry);
+				  }
+				  sentry = window.setInterval(function() {
+				    if (connection.readyState !== 1) {
+				      console.log('Unable to communicate with the WebSocket server. Attempting to reconnect');
+				      startSocket();
+				    }
+				  }, 15100);
+
+				};
+
+
+
+});
+</script>
+</body>
+</html>

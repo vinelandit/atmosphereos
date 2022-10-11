@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<% include partials/head %>
+<% 
+  if(parseInt(goLiveIn)<=0) {
+    goLiveIn = '15';
+  }
+
+%>
+
+  <!-- TIMELINE ASSETS -->
+  <script type="text/javascript" src="/js/vis-timeline-graph2d.min.js"></script>
+  <link href="/css/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <% include partials/sidebar %>
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <% include partials/topbar %>
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <div class="">
+            
+            <div class="video-preview">
+                <video src="" controls></video>
+            </div>
+
+            <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> -->
+            <div id="visualization"></div>
+            <div class="editTimelineItem editTimelineItem-main" data-type="timeline" data-item-id="" data-action-id="" data-target-id="">
+              <h5 class="bind-actionID">No item selected</h5>
+                <h6 class="bind-group"></h6>
+
+                <div class="form-group">
+                    <label class="small">Duration</label>
+                    <div class="input-group input-group-sm" >
+                        <input type="text" name="duration" placeholder="" class="form-control" />
+                        <div class="input-group-append">
+                            <div class="input-group-text">sec</div>
+                        </div>
+                    </div>
+                    <i class="note" id="durationZeroNote">A duration of 0 means the action will display until turned off manually.</i>
+                </div>
+                <div class="itemGroup itemGroup-fade">
+                  <div class="form-group">
+                      <label class="small">Fade in</label>
+                      <div class="input-group input-group-sm" >
+                          <input type="text" name="fadeIn" placeholder="" class="bind bind-fadeIn bindItem form-control" />
+                          <div class="input-group-append">
+                              <div class="input-group-text">sec</div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="small">Fade out</label>
+                      <div class="input-group input-group-sm" >
+                          <input type="text" name="fadeOut" placeholder="" class="bind bind-fadeOut bindItem form-control" />
+                          <div class="input-group-append">
+                              <div class="input-group-text">sec</div>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                <div class="itemGroup itemGroup-hue">
+                  <div class="form-group">
+                      <label class="small">Colour</label>
+                      <div class="input-group input-group-sm" >
+                          <input type="color" name="color" placeholder="" class="bind bind-color bindItem form-control" />
+                         
+                      </div>
+                  </div>
+                </div>
+                <div class="itemGroup itemGroup-moodo">
+                  <div class="form-group">
+                      <label class="small moodoLabel moodoLabel0">Capsule 1</label>
+                      <div class="input-group input-group-sm" >
+                          <input type="text" name="moodoSlot0" value="0" placeholder="" class="bind bind-moodoSlot0 bindItem form-control" />
+                          <div class="input-group-append">
+                              <div class="input-group-text">%</div>
+                          </div>
+                      </div>
+                      <label class="small moodoLabel moodoLabel1">Capsule 2</label>
+                      <div class="input-group input-group-sm" >
+                          <input type="text" name="moodoSlot1" value="0" placeholder="" class="bind bind-moodoSlot1 bindItem form-control" />
+                          <div class="input-group-append">
+                              <div class="input-group-text">%</div>
+                          </div>
+                      </div>
+                      <label class="small moodoLabel moodoLabel2">Capsule 3</label>
+                      <div class="input-group input-group-sm" >
+                          <input type="text" name="moodoSlot2" value="0" placeholder="" class="bind bind-moodoSlot2 bindItem form-control" />
+                          <div class="input-group-append">
+                              <div class="input-group-text">%</div>
+                          </div>
+                      </div>
+                      <label class="small moodoLabel moodoLabel3">Capsule 4</label>
+                      <div class="input-group input-group-sm" >
+                          <input type="text" name="moodoSlot3" value="0" placeholder="" class="bind bind-moodoSlot3 bindItem form-control" />
+                          <div class="input-group-append">
+                              <div class="input-group-text">%</div>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+
+                <!-- 
+                  TO DO
+                <div class="itemGroup itemGroup-conditional">
+                  <div class="form-group">
+                      <label class="small">Only show if</label>
+                      <div class="input-group input-group-sm"  >
+                          <div class="conditionalBlock">Blue</div>
+                          <select name="conditional-ac1581608289571-operator" class="bind form-control">
+                            <option value="==">=</option>
+                            <option value=">">></option>
+                            <option value=">=">>=</option>
+                            <option value="<"><</option>
+                            <option value="<="><=</option>
+                            <option value="!=">is not</option>
+                          </select>
+                      </div>
+                      <div class="input-group input-group-sm" >
+                          <select name="conditional-ac1581608289571-operand" class="bind form-control">
+                            <option value="anything">anything</option>
+                            <option value="Red">Red</option>
+                            <option value="Number">Number</option>
+                            <option value="String">String</option>
+                          </select>
+                      </div>
+                      <label class="small">Otherwise show</label>
+                      <select name="conditional-ac1581608289571-else" class="actionsDropdown bind form-control">
+                          
+                      </select>
+                  </div>
+                </div>
+              -->
+                <div class="form-group">
+                    <div class="input-group input-group-sm" >
+                        <button disabled="disabled" class="btn-save-item btn btn-primary form-control">Save</button>
+                        
+                    </div>
+                </div>
+                <div class="itemGroup itemGroup-video form-group">
+                    <div class="input-group input-group-sm" >
+                        <button class="btn btn-info btn-frame-edit form-control"><i class="far fa-square"></i>&nbsp;&nbsp;Frame Sync</button>
+                        
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="input-group input-group-sm" >
+                        <a href="#" class="btn-test btn btn-secondary form-control">Test</a>
+                        
+                    </div>
+                </div>
+            </div>
+<div class='items-panel clearfix'>
+  <div class='side'><br/>
+    <h4>Actions</h4>
+    <ul class="items">
+     
+      
+         
+    </ul>
+  </div>
+  <!-- 
+  <div class='side'>
+    <h3>Object with "target:'item'":</h3>
+    <li draggable="true" class="object-item">
+      object with target:'item'
+    </li>
+  </div> -->
+</div><br/>
+<div class="row nudgeRow">
+  <div class="col">
+      <h5 class="clearfix">Go live in </h5>
+      <form class="form" method="get" id="submitGoLive">
+        <div class="input-group">
+          
+            
+            <input type="text" id="goLiveIn" name="goLiveIn" value='15' placeholder="" class="form-control" />
+            <div class="input-group-append goLiveIn-seconds"  >
+                <div class="input-group-text">sec</i></div>
+                <div class="input-group-text goLiveNow"><i class="fa fa-arrow-circle-right"></i></div>
+            </div>
+        </div>
+
+               
+
+      </form>
+  </div>
+  <div class="col">
+      <h5 class="clearfix">Duplicate content </h5>
+      <form class="form" method="get" id="submitDuplicate">
+        <div class="formRow">
+          <label>from</label>
+          <div class="input-group">
+              
+              
+              <select id="fromChannel" name="fromChannel" class="channelsDropdown form-control">
+              </select>
+             
+          </div>
+        </div>
+
+        <div class="formRow">
+          <label>to</label>
+          <div class="input-group">
+              
+              
+              <select id="toChannel" name="toChannel" class="channelsDropdown form-control">
+              </select>
+             
+          </div>
+               
+        </div>
+        <div class="formRow">
+            <label>offset</label>
+          <div class="input-group">
+              
+              <div class="input-group-prepend duplicate-back">
+                <div class="input-group-text"><i class="fa fa-arrow-circle-left"></i></div>
+              </div>
+              <input type="text" name="duplicate-offset" value='0' placeholder="" class="form-control" />
+              <div class="input-group-append">
+                            <div class="input-group-text">sec</div>
+                        </div>
+              <div class="input-group-append duplicate-forward"  >
+                  <div class="input-group-text"><i class="fa fa-arrow-circle-right"></i></div>
+              </div>
+          </div>
+        </div>
+      </form>
+  </div>
+  <div class="col">
+
+    <h5 class="clearfix">Nudge events</h5>
+      <form class="form">
+        <div class="formRow">
+          <label>channels</label>
+            <div class="input-group">
+                
+                
+                <select id="nudgeChannel" name="nudgeChannel" class="channelsDropdown form-control">
+                  <option value="all">- all -</option>
+                </select>
+               
+            </div>
+          </div>
+          <div class="formRow">
+            <label>offset</label>
+          <div class="input-group">
+              
+              <div class="input-group-prepend nudge-back">
+                <div class="input-group-text"><i class="fa fa-arrow-circle-left"></i></div>
+              </div>
+              <input type="text" name="nudge" value='' placeholder="" class="form-control" />
+              <div class="input-group-append">
+                            <div class="input-group-text">min</div>
+                        </div>
+              <div class="input-group-append nudge-forward"  >
+                  <div class="input-group-text"><i class="fa fa-arrow-circle-right"></i></div>
+              </div>
+          </div>
+        </div>
+
+      </form>
+  </div>
+  
+  <div class="col">
+      <h5 class="clearfix">Clone events <small>(minutes)</small></h5>
+      <form class="form">
+        <div class="formRow">
+          <label>channels</label>
+            <div class="input-group">
+                
+                
+                <select id="cloneChannel" data-all="yes" name="cloneChannel" class="channelsDropdown form-control">
+                 
+                  <option value="all">- all -</option>
+                </select>
+               
+            </div>
+          </div>
+        <div class="formRow">
+            <label>Offset</label>
+          <div class="input-group">
+            <div class="input-group-prepend clone-back">
+              <div class="input-group-text"><i class="fa fa-arrow-circle-left"></i></div>
+            </div>
+            <input type="text" name="clone" value='' placeholder="" class="form-control" />
+             <div class="input-group-append">
+                            <div class="input-group-text">min</div>
+                        </div>
+            <div class="input-group-append clone-forward"  >
+                <div class="input-group-text"><i class="fa fa-arrow-circle-right"></i></div>
+            </div>
+        </div>
+      </div>
+               
+
+          </form>
+  </div>
+</div>
+        <!-- /.container-fluid -->
+        <br/>
+        <hr/>
+     <h5>Check In <div class="badge"><span class="checkinURL"></span></div></h5>
+     <div id="checkinHolder">
+      <div id="checkinEvents"></div>
+
+      <button class="btn btn-sm btn-primary btn-newCheckinEvent"><i class="fa fa-plus"></i> Add new</button>
+   </div>
+<br/>
+<hr/>     
+<h5>Accumulators</h5>
+     <div id="accHolder">
+     <div id="accumulators">
+       
+     </div>
+
+     <button class="btn btn-sm btn-primary btn-newAccumulator"><i class="fa fa-plus"></i> Add new</button>
+   </div>
+<br/>
+<hr/>
+<h5>Conditional triggers</h5>
+     <div id="conditionalHolder">
+     <div id="conditionals">
+       
+     </div>
+
+     <button class="btn btn-sm btn-primary btn-newConditional"><i class="fa fa-plus"></i> Add new</button>
+   </div>
+<br/>
+<hr/>
+     <h5>Cue Board</h5>
+     <div id="cueboardItems"></div>
+
+     <button class="btn btn-sm btn-primary btn-newCueboardItem"><i class="fa fa-plus"></i> Add new</button>
+     <br/><br/>
+      </div>
+      <!-- End of Main Content -->
+
+      <% include partials/footer %>
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <% include partials/settingsModal %>
+  <% include partials/liveModeModal %>
+  <% include partials/actionsModal %>
+  <% include partials/movieCuesModal %>
+  <% include partials/scripts %>
+  <% include partials/wshelpers %>
+  <% include partials/backendScripts %>
+<script type="text/javascript">
+  function toggleFrameSync(i) {
+    console.log('in toggleFrameSync');
+    var newFrameSync = false;
+    if(typeof i.frameSync !== 'undefined' && i.frameSync) {
+      newFrameSync = false;
+      project.currentParentItemID=null;
+      console.log('splaash');
+    } else {
+      newFrameSync = true;
+      project.currentParentItemID=i.id;
+      console.log('sploosh');
+    }
+    if(newFrameSync !== i.frameSync) {
+      i.frameSync = newFrameSync;
+      project.updateItem(i);
+    }
+    var a = project.getAction(i.actionID);
+    updateFrameSyncButton();
+  }
+  function resetPlayhead() {
+    if(project.currentParentItemID!=null) {
+      var i = project.getItem(project.currentParentItemID);
+      playheadID = 'fs' + project.currentParentItemID;
+      var markerText = '00:00:00:000'; 
+      if($('.vis-custom-time.'+playheadID).length) {
+
+        // console.log('Set custom time in resetplayhead');
+        timeline.setCustomTime(i.start, playheadID);
+        $('.vis-custom-time.'+playheadID+' .vis-custom-time-marker').html(markerText);
+      } else {
+        timeline.addCustomTime(i.start, playheadID);
+        timeline.setCustomTimeMarker(markerText, playheadID);
+      }
+    }
+  }
+  function removePlayhead() {
+    if(project.currentParentItemID!=null) {
+      timeline.removeCustomTime('fs'+project.currentParentItemID);
+      project.currentParentItemID=null;
+    }
+  }
+  function syncVideo(myTime) {
+    var i = project.getItem(project.currentParentItemID);
+     
+    var diff = moment(myTime).diff(i.start);
+    if(diff>=0 && moment(myTime).isSameOrBefore(i.end)) {
+      var diffM = moment.duration(diff);
+      var v = $('.video-preview video')[0];
+      v.pause();
+      v.currentTime = diffM.as('seconds');
+      setPlayheadLabel(diffM);
+    } else {
+
+      // console.log('Set custom time in syncVideo');
+      if(diff<0) {
+        timeline.setCustomTime(i.start, playheadID);
+      } else {
+        timeline.setCustomTime(i.end,playheadID);
+      }
+    }
+  }
+  function pad(n, width, z) {
+    z = z || '0';
+    n = n + '';
+    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+  }
+  function setPlayheadLabel(diffM) {
+      var diffString = pad(diffM.hours(),2)+':'+pad(diffM.minutes(),2)+':'+pad(diffM.seconds(),2)+':'+pad(diffM.milliseconds(),3);
+
+      $('.vis-custom-time.'+playheadID).find('.vis-custom-time-marker').html(diffString);
+    }
+  function updateFrameSyncButton() {
+    console.log('in updateFrameSyncButton');
+    console.log(project.currentParentItemID);
+    var i = project.getItem(project.currentParentItemID);
+    if(project.currentParentItemID!=null) {
+      val = true;
+    } else {
+      val = false;
+    }
+    var a = project.getAction(i.actionID);
+    var child = false;
+    
+    var myID = $('.editTimelineItem-main').attr('data-item-id');
+    if(myID!=i.id) {
+      child = true;
+    }
+
+    if(val) {
+      $('.btn-frame-edit').addClass('btn-warning').removeClass('btn-info').find('i').addClass('fa-check-square').removeClass('fa-square');
+      var v = $('.video-preview');
+      if(v.find('video').attr('src')!='/video/'+a.video.filename) {
+        v.slideDown('fast').find('video').attr('src','/video/'+a.video.filename);
+      }
+      
+      lastVideoTime = -1000;
+      if(typeof vidtime==='undefined') {
+
+        vidtime = window.setInterval(function(){
+            var i = project.getItem(project.currentParentItemID);
+            var t = $('.video-preview video')[0].currentTime;
+            if(lastVideoTime != t) {
+              // update playhead
+              var newTime = moment(i.start).add('seconds',t);
+              resetPlayhead();
+
+              // console.log('Set custom time in updateFrameSyncButton');
+              timeline.setCustomTime(newTime, playheadID);
+              setPlayheadLabel(moment.duration(newTime.diff(i.start)));
+              lastVideoTime = t;
+            }
+           
+          
+        },250);
+      } else {
+
+      }
+          
+      
+      
+      
+
+      i.className='frameSync';
+      
+    } else {
+      console.log('exiting sync slave mode');
+      $('.btn-frame-edit').removeClass('btn-warning').addClass('btn-info').find('i').removeClass('fa-check-square').addClass('fa-square');
+      $('.video-preview').slideUp('fast').find('video')[0].pause();
+      removePlayhead();
+      i.className = '';
+    }
+
+    if(!child) items.update(i);
+    if(typeof val === 'undefined') {
+      val = false;
+    } 
+    return val;
+  }
+  function invigilateCheckinEvents(formSelector) {
+    if(typeof formSelector === 'undefined') {
+      var formSelector = '.checkinForm';
+    }
+    // ensure that only Hue actions are allowed on Hue devices and vice versa
+    $(formSelector).each(function(){
+      var myChannels = $(this).find('[name="channel"]');
+      var myActions = $(this).find('[name="actionID"]');
+      if(myActions.val().toLowerCase().indexOf('hue ')==0) {
+         myChannels.find('option').each(function(){
+          if($(this).attr('value').toLowerCase().indexOf('hue')==0) {
+            $(this).attr('disabled',false);
+          } else {
+            $(this).attr('disabled',true);
+          }
+         });
+      } else {
+          myChannels.find('option').each(function(){
+          if($(this).attr('value').toLowerCase().indexOf('hue')==0) {
+            $(this).attr('disabled',true);
+          } else {
+            $(this).attr('disabled',false);
+          }
+         });
+      }
+    });
+  }
+  function saveCheckinEvents() {
+    var ce = [];
+    $('.checkinForm').each(function(){
+      var id = $(this).find('[name="id"]').val();
+      var obj = project.getCheckinEvent(id);
+      $(this).find('.bind').each(function(){
+        var n = $(this).attr('name');
+        var val = $(this).val();
+        var path = n.split('-');
+
+        var subPath = '';
+        for(i in path) {
+            subPath += '.'+path[i];
+            evalStr = ` if (typeof obj`+subPath+` === 'undefined') obj`+subPath+` = {} `;
+            fillNew = eval (evalStr);
+        }
+        var p = 'obj'+'.'+path.join('.')+' = "'+val+'"';
+        var t = eval(p);
+      });
+      ce.push(obj);
+    });
+    project.checkinEvents = ce;
+  }
+  function saveConditionals() {
+    var ct = [];
+    $('.conditionalForm').each(function(){
+      var id = $(this).find('[name="id"]').val();
+      var obj = project.getConditional(id);
+      $(this).find('.bind').each(function(){
+        var n = $(this).attr('name');
+        var val = $(this).val();
+        var path = n.split('-');
+
+        var subPath = '';
+        for(i in path) {
+            subPath += '.'+path[i];
+            evalStr = ` if (typeof obj`+subPath+` === 'undefined') obj`+subPath+` = {} `;
+            fillNew = eval (evalStr);
+        }
+        var p = 'obj'+'.'+path.join('.')+' = "'+val+'"';
+        var t = eval(p);
+      });
+      ct.push(obj);
+    });
+    project.conditionals = ct;
+  }
+  function saveAccumulators() {
+    var a = [];
+    $('.accumulatorForm').each(function(){
+      var id = $(this).find('[name="id"]').val();
+      var obj = project.getAccumulator(id);
+      $(this).find('.bind').each(function(){
+        var n = $(this).attr('name');
+        var val = $(this).val();
+        var path = n.split('-');
+
+        var subPath = '';
+        for(i in path) {
+            subPath += '.'+path[i];
+            evalStr = ` if (typeof obj`+subPath+` === 'undefined') obj`+subPath+` = {} `;
+            fillNew = eval (evalStr);
+        }
+        var p = 'obj'+'.'+path.join('.')+' = "'+val+'"';
+        var t = eval(p);
+      });
+      a.push(obj);
+    });
+    project.accumulators = a;
+  }
+  function invigilateCueboardItems() {
+    // ensure that only Hue actions are allowed on Hue devices and vice versa
+    $('.cueboardForm').each(function(){
+      var myChannels = $(this).find('[name="channel"]');
+      var myActions = $(this).find('[name="actionID"]');
+      if(myActions.val().toLowerCase().indexOf('hue ')==0) {
+         myChannels.find('option').each(function(){
+          if($(this).attr('value').toLowerCase().indexOf('hue')==0) {
+            $(this).attr('disabled',false);
+          } else {
+            $(this).attr('disabled',true);
+          }
+         });
+      } else if(myActions.val().toLowerCase().indexOf('moodo ')==0) {
+         myChannels.find('option').each(function(){
+          if($(this).attr('value').toLowerCase().indexOf('moodo')==0) {
+            $(this).attr('disabled',false);
+          } else {
+            $(this).attr('disabled',true);
+          }
+         });
+      } else {
+          myChannels.find('option').each(function(){
+          if($(this).attr('value').toLowerCase().indexOf('hue')==0) {
+            $(this).attr('disabled',true);
+          } else {
+            $(this).attr('disabled',false);
+          }
+         });
+      }
+    });
+  }
+  function saveCueboardItems() {
+    var cb = [];
+    $('.cueboardForm').each(function(){
+      var id = $(this).find('[name="id"]').val();
+      var obj = project.getCueboardItem(id);
+      $(this).find('.bind').each(function(){
+        var n = $(this).attr('name');
+        var val = $(this).val();
+        var path = n.split('-');
+
+        var subPath = '';
+        for(i in path) {
+            subPath += '.'+path[i];
+            evalStr = ` if (typeof obj`+subPath+` === 'undefined') obj`+subPath+` = {} `;
+            fillNew = eval (evalStr);
+        }
+        var p = 'obj'+'.'+path.join('.')+' = "'+val+'"';
+        var t = eval(p);
+      });
+      cb.push(obj);
+    });
+    console.log('Tippidy: ');
+    console.log(cb);
+    project.cueboardItems = cb;
+  }
+  function checkDurationMessage() {
+    var f = $('.editTimelineItem');
+    var d = f.find('input[name="duration"]').val();
+    var n = $('#durationZeroNote');
+    if(f.attr('data-type')=='cueboard' && d=='0') {
+      n.slideDown('fast');
+    } else {
+      n.slideUp('fast');
+    }
+  }
+  $(document).ready(function(){
+
+    $('input[name="duration"]').bind('click change blur focus',function(){
+      checkDurationMessage();
+    });
+    // populate check-in actions list
+    // get clone of actions, add hue
+    var ac = { ...project.actions };
+
+    for(i in hueActions) {
+      ac[hueActions[i]] = { 'id':hueActions[i] };
+    }
+    for(i in moodoActions) {
+      ac[moodoActions[i]] = { 'id':moodoActions[i] };
+    }
+
+
+    var ch = project.targets;
+    var ce = project.checkinEvents;
+    var ct = project.conditionals;
+    var acc = project.accumulators;
+    var html = '';
+    for(i in ce) {
+      html += ejs.render(front['checkin-event'],{
+        'actions':ac,
+        'channels':ch,
+        'data': ce[i]
+
+      });
+    }
+    $('#checkinEvents').html(html);
+    invigilateCheckinEvents();
+
+    html = '';
+    for(i in acc) {
+      html += ejs.render(front['accumulator'],{
+        'data': acc[i]
+      });
+    }
+
+    $('#accumulators').html(html);
+
+
+    html = '';
+    for(i in ct) {
+      html += ejs.render(front['conditional-trigger'],{
+        'data': ct[i],
+        'actions':ac,
+        'channels':ch,
+        'accumulators':acc
+      });
+    }
+
+    $('#conditionals').html(html);    
+
+    invigilateCheckinEvents('.conditionalForm');
+
+    $(document).off('click blur change','.checkinForm input, .checkinForm select').on('click blur change','.checkinForm input, .checkinForm select',function(){
+      invigilateCheckinEvents();
+      var ce = [];
+      if(typeof ceu !== 'undefined') {
+        window.clearTimeout(ceu);
+      }
+      ceu = window.setTimeout(function(){
+        saveCheckinEvents();
+      },500);
+    });
+
+    $(document).off('click blur change','.conditionalForm input, .conditionalForm select').on('click blur change','.conditionalForm input, .conditionalForm select',function(){
+      invigilateCheckinEvents('.conditionalForm');
+      var ct = [];
+      if(typeof ctu !== 'undefined') {
+        window.clearTimeout(ctu);
+      }
+      ctu = window.setTimeout(function(){
+        saveConditionals();
+      },500);
+    });
+
+
+    $(document).off('click blur change','.accumulatorForm input, .accumulatorForm select').on('click blur change','.accumulatorForm input, .accumulatorForm select',function(){
+      var a = [];
+      if(typeof au !== 'undefined') {
+        window.clearTimeout(au);
+      }
+      au = window.setTimeout(function(){
+        saveAccumulators();
+      },500);
+    });
+
+    $(document).off('click','.btn-checkinEventDelete').on('click','.btn-checkinEventDelete',function(e){
+      e.preventDefault();
+      if(confirm("Are you sure you want to delete this check-in event?")){
+        $(this).closest('.checkinForm').remove();
+        saveCheckinEvents();
+      }
+    });
+
+
+    $(document).off('click','.btn-conditionalDelete').on('click','.btn-conditionalDelete',function(e){
+      e.preventDefault();
+      if(confirm("Are you sure you want to delete this conditional trigger?")){
+        $(this).closest('.conditionalForm').remove();
+        saveConditionals();
+      }
+    });
+
+    $(document).off('click','.btn-accumulatorDelete').on('click','.btn-accumulatorDelete',function(e){
+      e.preventDefault();
+      if(confirm("Are you sure you want to delete this accumulator?")){
+        $(this).closest('.accumulatorForm').remove();
+        saveAccumulators();
+      }
+    });
+
+    $(document).off('click','.btn-checkinEventSettings').on('click','.btn-checkinEventSettings',function(e){
+      e.preventDefault();
+      var myID = $(this).attr('data-id');
+      var myCE = project.getCheckinEvent(myID);
+      console.log('SENDING ');
+      console.log(myCE);
+      updateEditPanel({
+        'items': [
+          myCE
+        ]
+      });
+    });
+
+    $(document).off('click','.btn-conditionalSettings').on('click','.btn-conditionalSettings',function(e){
+      e.preventDefault();
+      var myID = $(this).attr('data-id');
+      var myCT = project.getConditional(myID);
+      console.log('SENDING ');
+      console.log(myCT);
+      updateEditPanel({
+        'items': [
+          myCT
+        ]
+      });
+    });
+
+
+    $('.btn-frame-edit').click(function(e){
+      e.preventDefault();
+      var t = $('.editTimelineItem-main');
+      var i = project.getItem(t.attr('data-item-id'));
+
+      toggleFrameSync(i);
+
+    });
+    $('.btn-newCheckinEvent').click(function(){
+      $('#checkinEvents').append(ejs.render(front['checkin-event'],{
+        'actions':ac,
+        'channels':ch,
+        'data': {
+          'id':'ce'+Date.now()
+        }
+
+      }));
+    });
+    $('.btn-newConditional').click(function(){
+      $('#conditionals').append(ejs.render(front['conditional-trigger'],{
+        'actions':ac,
+        'accumulators':acc,
+        'channels':ch,
+        'data': {
+          'id':'ct'+Date.now()
+        }
+
+      }));
+    });
+    $('.btn-newAccumulator').click(function(){
+      $('#accumulators').append(ejs.render(front['accumulator'],{
+        'actions':ac,
+        'channels':ch,
+        'data': {
+          'id':'ac'+Date.now()
+        }
+
+      }));
+    });
+
+    // cue board
+    var cb = project.cueboardItems;
+
+    var html = '';
+    for(i in cb) {
+      html += ejs.render(front['cueboard-item'],{
+        'actions':ac,
+        'channels':ch,
+        'data': cb[i]
+
+      });
+    }
+
+    $('#cueboardItems').html(html);
+    invigilateCueboardItems();
+
+    $(document).off('click blur change','.cueboardForm input, .cueboardForm select').on('click blur change','.cueboardForm input, .cueboardForm select',function(){
+      invigilateCueboardItems();
+      var cb = [];
+      if(typeof cbu !== 'undefined') {
+        window.clearTimeout(cbu);
+      }
+      cbu = window.setTimeout(function(){
+        saveCueboardItems();
+      },500);
+    });
+
+    $(document).off('click','.btn-cueboardItemDelete').on('click','.btn-cueboardItemDelete',function(e){
+      e.preventDefault();
+      if(confirm("Are you sure you want to delete this cueboard item?")){
+        $(this).closest('.cueboardForm').remove();
+        saveCueboardItems();
+      }
+    });
+
+    $(document).off('click','.btn-cueboardItemSettings').on('click','.btn-cueboardItemSettings',function(e){
+      e.preventDefault();
+      var myID = $(this).attr('data-id');
+      var myCB = project.getCueboardItem(myID);
+      console.log(myCB);
+      updateEditPanel({
+        'items': [
+          myCB
+        ]
+      });
+    });
+    $('.btn-newCueboardItem').click(function(){
+      $('#cueboardItems').append(ejs.render(front['cueboard-item'],{
+        'actions':ac,
+        'channels':ch,
+        'data': {
+          'id':'cb'+Date.now()
+        }
+
+      }));
+    }); 
+
+
+    function updateEditPanel(data) {
+      console.log('UPDATE EDIT PANEL',data);
+      var t = $('.editTimelineItem-main');
+      if(typeof data.items!=='undefined') {
+        var bindings = [];
+        if(typeof data.items[0] === 'object' && typeof data.items[0] !== null) {
+          // from check-in or cueboard events
+          var me = data.items[0];
+          if(me.id.indexOf('ce')==0) {
+            // check in event
+            t.attr('data-type','checkin');
+            me.group = me.channel + '<small><br/><div class="bg-primary badge" style="color:white">CHECK IN EVENT</div></small>';
+          } else if (me.id.indexOf('cb')==0){
+            // cueboard item
+            t.attr('data-type','cueboard');
+            me.group = me.channel + '<small><br/><div class="bg-secondary badge" style="color:white">CUEBOARD ITEM</div></small>';
+
+          } else if (me.id.indexOf('ct')==0){
+            // conditional trigger
+            t.attr('data-type','conditional');
+            me.group = me.channel + '<small><br/><div class="bg-warning badge" style="color:white">CONDITIONAL TRIGGER</div></small>';
+
+          }
+          if(typeof me.duration !== 'undefined') {
+            t.find('[name="duration"]').val(me.duration);
+          } else {
+            t.find('[name="duration"]').val(5);
+          }
+        } else {
+          t.attr('data-type','timeline');
+          var me = project.getItem(data.items[0]);
+
+          var duration = moment.duration(moment(me.end).diff(moment(me.start))).asSeconds();
+          t.find('[name="duration"]').val(duration);
+        }
+        if(t.attr('data-item-id')!=me.id) {
+          console.log("I'm here because "+t.attr('data-item-id')+' is not equal to  '+me.id);
+          t.attr('data-item-id',me.id);
+          t.attr('data-action-id',me.actionID);
+          t.attr('data-target-id',me.group);
+          if(me.actionID.toLowerCase().indexOf('hue ')==0) {
+            var myType = 'hue';
+          } else if (me.actionID.toLowerCase().indexOf('moodo ')==0) {
+            var myType = 'moodo';
+          } else {
+            var myType = 'device';
+          }
+          
+
+          for(i in me) {
+            var target = t.find('.bind-'+i);
+            if(target.length) {
+              if(target.is('input')||t.is('select')||t.is('textarea')) {
+
+                target.val(me[i]);
+              } else {
+
+                target.html(me[i]);
+                if(typeof me.syncParent!=='undefined' && me.syncParent!='' && i=='group') {
+                  target.html(target.html()+'<small><br/><div class="bg-success badge" style="color:white">FRAME SYNC\'D EVENT</div></small>');
+                }
+              }
+              $('.itemGroup').hide();
+              if(myType=='device'||me.actionID=='Hue colour') {
+                $('.itemGroup-'+myType).show();
+              }
+              if(me.actionID=='Moodo') {
+                $('.itemGroup-moodo').show();
+                // populate capsule names
+
+                if(typeof project.moodoDevices[ me.group ] !== 'undefined') {
+
+                  populateMoodo(me.group);
+
+                  
+                }
+                if(typeof project.moodoDevices[ me.channel ] !== 'undefined') {
+
+                  populateMoodo(me.channel);
+
+                  
+                }
+              }
+              // if(me.actionID=='Hue conditional branch'||me.actionID=='Conditional branch') {
+                $('.itemGroup-conditional').show();
+              // }
+              if(me.actionID!='Hue on'&&me.actionID!='Moodo') {
+                $('.itemGroup-fade').show();
+              }
+              
+
+            }
+            
+          }
+          var showVid = false;
+          var a = project.getAction(me.actionID);
+          console.log(me.actionID+', TYPE '+a.type);
+          if(a.type=='video' && (typeof me.syncParent=='undefined'||me.syncParent=='')) {
+            $('.itemGroup-video').show();
+            if(typeof me.frameSync !== 'undefined' && me.frameSync) {
+              showVid = true;
+            }
+          }
+          if(typeof me.syncParent !== 'undefined' && me.syncParent!='') {
+            project.currentParentItemID = me.syncParent;
+          }
+          updateFrameSyncButton();
+          if(!showVid && (typeof me.syncParent === 'undefined' || me.syncParent=='')) {
+            $('.video-preview video')[0].pause();
+            $('.video-preview').slideUp('fast');
+            if(typeof playheadID !== 'undefined' && playheadID!='') {
+              timeline.removeCustomTime(playheadID);
+              playheadID='';
+            }
+          }
+        }
+        
+      }
+      populateActionDropdowns();
+      $('.editTimelineItem-main .btn-save-item').prop('disabled',true);
+    }
+    $(document).off('change keydown','.editTimelineItem-main input,.editTimelineItem-main select,.editTimelineItem-main textarea').on('change keydown','.editTimelineItem-main input,.editTimelineItem-main select,.editTimelineItem-main textarea',function(){
+      
+      $('.editTimelineItem-main .btn-save-item').prop('disabled',false);
+    });
+    $(document).off('click','.editTimelineItem-main .btn-test').on('click','.editTimelineItem-main .btn-test',function(e){
+      e.preventDefault();
+      var d = $('.editTimelineItem-main');
+      var itemID = d.attr('data-item-id');
+      if(d.attr('data-type')=='timeline') {
+        var i = project.getItem(itemID);
+        var target = i.group;
+      } else if (d.attr('data-type')=='checkin') {
+        var i = project.getCheckinEvent(itemID);
+        var target = i.channel;     
+      } else if (d.attr('data-type')=='cueboard') {
+        var i = project.getCueboardItem(itemID);
+        var target = i.channel;     
+      } else if (d.attr('data-type')=='conditional') {
+        var i = project.getConditional(itemID);
+        var target = i.channel;     
+      }
+      var actionID = i.actionID;
+
+      if(typeof i.fadeOut === 'undefined' || i.fadeOut == null || i.fadeOut=='') {
+        i.fadeOut = 0;
+      }
+      if(typeof i.fadeIn === 'undefined' || i.fadeIn == null || i.fadeIn=='') {
+        i.fadeIn = 0;
+      }
+
+      if(target.toLowerCase().indexOf('hue ')==0) {
+        // flash hue
+        // flashHue(connection,target,'MASTER');
+        // assemble the action
+        if(actionID=='Hue colour') {
+          var myColor = i.color;
+          var myRGB = hex2rgb(myColor);
+          var myHSV = rgb2hsv(myRGB.r,myRGB.g,myRGB.b);
+          sendHue(connection,target,{
+            "on":true,
+            "hue":myHSV[0],
+            "sat":myHSV[1],
+            "bri":myHSV[2],
+            "transitiontime":i.fadeIn*10
+          });
+
+          // turn it off in 5
+          window.setTimeout(function(){
+            sendHue(connection,target,{
+              "on":false,
+              "bri":0,
+              "transitiontime":i.fadeOut*10
+            });
+          },5000-(i.fadeOut*1000));
+        } else if (actionID=='Hue on') {
+          sendHue(connection,target,{
+            "on":true
+          });
+          // turn it off in 5
+          window.setTimeout(function(){
+            sendHue(connection,target,{
+              "on":false
+            });
+          },5000);
+        }
+      } else if (target.toLowerCase().indexOf('moodo ')==0) {
+        console.log('Flashing Moodo...',i);
+        sendMoodo(connection,target,{
+            slot0: i.moodoSlot0,
+            slot1: i.moodoSlot1,
+            slot2: i.moodoSlot2,
+            slot3: i.moodoSlot3
+        });
+
+        // turn it off in 5
+        window.setTimeout(function(){
+          sendMoodo(connection,target,{
+            slot0: 0,
+            slot1: 0,
+            slot2: 0,
+            slot3: 0
+          });
+        },5000);
+      } else {
+        // get the action
+        var a = project.getAction(actionID);
+
+        a.duration = Math.max(5,parseFloat(i.fadeIn)+parseFloat(i.fadeOut));
+        a.fadeIn = i.fadeIn;
+        a.fadeOut = i.fadeOut;
+        console.log(a);
+        console.log(target);
+        var customFonts = [];
+        var someFonts = false;
+        var fontFaces = '';
+
+        if(typeof a.text !== 'undefined') {
+          // check for custom fonts...
+          if(a.text.font.indexOf('.')>-1) {
+
+            someFonts = true;
+            customFonts[a.text.font] = a.text.font;
+          }
+          if(typeof a.text.additionalFont !== 'undefined' && a.text.additionalFont.indexOf('.')>-1) {
+            someFonts = true;
+            customFonts[a.text.additionalFont] = a.text.additionalFont;
+          }
+        }
+        if(someFonts) {
+          for(i in customFonts) {
+            var temp = i.split('.');
+            var format = temp[1];
+            fontFaces += `@font-face {
+              font-family:'`+i+`';
+              src: url(/fonts/`+i+`) format('`+format+`');
+            }
+            `;
+          }
+        }
+        testAction(connection,target,actionID,ejs.render(template[a.type],a),a.duration,a.fadeIn,a.fadeOut,fontFaces);
+      }
+      
+    });
+
+
+
+    $('.editTimelineItem-main .btn-save-item').click(function(){
+      // save button
+      var myID =$('.editTimelineItem-main').attr('data-item-id');
+      var myType = $('.editTimelineItem-main').attr('data-type');
+      if(myType=='timeline') {
+        var me = project.getItem(myID);
+      } else if (myType=='checkin') {
+        var me = project.getCheckinEvent(myID);
+      } else if (myType=='cueboard') {
+        var me = project.getCueboardItem(myID);
+      } else if (myType=='conditional') {
+        var me = project.getConditional(myID);
+      }
+      console.log(myID);
+      $('.editTimelineItem-main .bind').each(function(){
+        var myField = $(this).attr('name');
+        var myVal = $(this).val();
+        // ADD VALIDATION HERE
+        me[myField] = myVal;
+      });
+
+      var d = $('.editTimelineItem-main [name="duration"]').val();
+      if(myType=='timeline') {
+        // process duration change  
+        if(d>0) {
+          var myEnd = moment(me.start).add(d,'seconds').format();
+          me.end = myEnd;
+          // update timeline
+          items.update(me);
+        }
+        project.updateItem(me);
+      } else if (myType=='checkin') {
+        me.duration = d;
+        project.setCheckinEvent(myID,me);
+      } else if (myType=='cueboard') {
+        me.duration = d;
+        project.setCueboardItem(myID,me);
+      } else if (myType=='conditional') {
+        me.duration = d;
+        project.setConditional(myID,me);
+      }
+
+      
+      $(this).prop('disabled',true);
+      
+    });
+
+    function populateMoodo(boxname) {
+        for(var i=0;i<4;i++) {
+          $('.moodoLabel'+i)
+            .css({ 'border-color':project.moodoDevices[boxname].settings[i].capsule_info.color })
+            .text( project.moodoDevices[boxname].settings[i].capsule_info.title );
+        }
+    }
+
+    function resetEditPanel() {
+      var t = $('#editTimelineItem');
+      t.find('.bind-name').html('No item selected')
+    }
+
+    // DOM element where the Timeline will be attached
+    var container = document.getElementById('visualization');
+
+
+    channels.add(project.timelineChannels);
+
+    var p = project.timelineItems;
+
+    // colorise the Hue colour items 
+    for(i in p) {
+      
+      if(p[i].actionID.indexOf('Hue colour')==0) {
+        if(typeof p[i].color === 'undefined') {
+          p[i].color = '#ffffff';
+        }
+        var rgb = hex2rgb(p[i].color);
+        if(rgb.r+rgb.g+rgb.b>450) {
+          var myColor = 'rgba(0,0,0,0.70)';
+        } else {
+          var myColor = 'rgba(255,255,255,0.85)';
+        }
+        // console.log(rgb);
+        p[i].style = 'color:'+myColor+' !important;background-color:'+p[i].color+' !important;';
+      }
+    }
+
+    // Create a DataSet (allows two way data-binding)
+    items = new vis.DataSet(p);
+    
+
+    // Configuration for the Timeline
+    var options = project.timelineOptions;
+    options.min = options.start;
+    options.max = options.end;
+    options.editable = true;
+    options.stack = false;
+    
+    options.rollingMode = {
+      'follow':false
+    }
+    options.onRemove = function (item, callback) {
+      var msg = 'Are you sure you want to delete this item?';
+      if(item.frameSync) {
+        msg = 'WARNING: if you delete this item, all its frame-sync child items will not fire.\n\n'+msg;
+      }
+      var ok = confirm(msg);
+
+      if(ok) {
+        callback(item); // confirm deletion
+      }
+      else {
+        callback(null); // cancel deletion
+      } 
+      
+    }
+    options.onDropObjectOnItem = function (objectData, item, callback) {
+        if (!item) { return; }
+        alert('dropped object with content: "' + objectData.content + '" to item: "' + item.content + '"');
+      
+    };
+
+    options.onMove = function (item, callback) {
+
+      /* var title = 'Do you really want to move the item to\n' +
+          'start: ' + item.start + '\n' +
+          'end: ' + item.end + '?';
+
+      var ok = confirm(title);
+      if (ok) {
+        callback(item); // send back item as confirmation (can be changed)
+      }
+      else {
+        callback(null); // cancel editing item
+      } */
+      // check if the channel and item match
+
+
+
+      if(item.group.toLowerCase().indexOf('hue ')==0) {
+        var myType = 'hue';
+      } else {
+        var myType = 'device';
+      }
+      if(item.actionID.toLowerCase().indexOf('hue ')==0) {
+        var myActionType = 'hue';
+      } else {
+        var myActionType = 'device';
+      }
+      if(myType==myActionType) {
+        callback(item);
+      } else {
+        callback(null);
+      }
+      
+
+    }
+
+    // Create a Timeline
+    timeline = new vis.Timeline(container, items, channels, options);
+
+
+    timeline.on('timechange', function (properties) {
+      // update the timecode
+      syncVideo(properties.time);
+      // console.log('TIMELINE CHANGE');
+      
+      // document.getElementById('timechangeBar').innerHTML = properties.id;
+      // document.getElementById('timechangeEvent').innerHTML = properties.time;
+    });
+    timeline.on('timechanged', function (properties) {
+      // update the timecode
+      syncVideo(properties.time);
+      console.log('TIMELINE CHANGED');
+      
+    });
+
+
+    timeline.on('select', function (data) {
+
+      console.log('in timeline.on select');
+      console.log(data);
+      if(data.items.length>0) {
+        var i = project.getItem(data.items[0]);
+        if(typeof i.frameSync !== 'undefined' && i.frameSync) {
+          project.currentParentItemID = i.id;
+          resetPlayhead();
+        }
+        if(typeof i.syncParent !== 'undefined' && i.syncParent!='') {
+          if(typeof playheadID == 'undefined' || playheadID =='') {
+            project.currentParentItemID = i.syncParent;
+            resetPlayhead();
+          }
+          // move the playhead
+          // timeline.setCustomTime(i.start, playheadID);
+          var p = project.getItem(i.syncParent);
+          syncVideo(i.start);
+          setPlayheadLabel(moment.duration(moment(i.start).diff(p.start)));
+        }
+
+        updateEditPanel(data);
+      } else {
+        resetEditPanel();
+      }
+    });
+    timeline.on('drop', function (item) {
+      
+
+      console.log('in timeline.on drop');
+      updateEditPanel(item);
+    });
+    var tMoratorium = false;
+    items.on('update',function(event,properties) {
+
+      console.log('in items.on update');
+
+      // overlap prevention goes here
+      
+
+      var lastIndex = properties.data.length-1;
+
+      
+      // for frame-sync video, update play head
+      var i = project.getItem(properties.data[lastIndex].id);
+      if(i.frameSync) {
+        var i = project.getItem(properties.data[0].id);
+        var diff = moment(properties.data[0].start).diff(i.start);
+        if(diff!=0) {
+          var oldTime = timeline.getCustomTime('fs'+project.currentParentItemID);
+          var newTime = moment(oldTime).add(diff);
+          console.log('Set custom time in update');
+          timeline.setCustomTime(newTime,'fs'+project.currentParentItemID);
+
+          // now move all child items on other channels by the same amount
+          var ti = project.timelineItems;
+          var cti = [];
+          for(ind in ti) {
+            console.log('Comparing '+i.id+' to '+ti[ind].syncParent);
+            if(typeof ti[ind].syncParent !== 'undefined' && ti[ind].syncParent==i.id) {
+              var anustart = moment(ti[ind].start).add(diff);
+              var anuend = moment(ti[ind].end).add(diff);
+              ti[ind].start = anustart;
+              ti[ind].end = anuend;
+              cti.push(ti[ind]);
+            }
+          }
+          console.log('tat');
+          project.timelineItems = ti;
+          // update changed items on timeline
+          items.update(cti);
+        }
+        
+      } else {
+        updateEditPanel({'items':[properties.data[lastIndex].id]});
+      }
+      
+      // filter gubbins from the content 
+      for(i in properties.data) {
+        project.updateItem(properties.data[i]);
+
+      }
+    });
+    items.on('remove',function(event,properties) {
+      for(i in properties.items) {
+        project.deleteItem(properties.items[i]);
+      }
+    });
+
+    function handleDragStart(event) {
+      var dragSrcEl = event.target;
+
+      event.dataTransfer.effectAllowed = 'move';
+      var itemType = 'range';
+      var myID = Date.now();
+      myID = 'i'+myID;
+      var item = {
+        id: myID,
+        type: itemType,
+        content: dragSrcEl.innerHTML,
+        actionID : dragSrcEl.getAttribute('data-actionID')
+      };
+      event.target.id = myID;
+      event.target.actionID = dragSrcEl.getAttribute('data-actionID');
+      event.dataTransfer.setData("text", JSON.stringify(item));
+    }
+    function handleDragEnd(event) {
+        // Last item that just been dragged, its ID is the same of event.target
+       
+        newItem_dropped = timeline.itemsData.get(event.target.id);
+        newItem_dropped.actionID = event.target.actionID;
+        newItem_dropped.fadeIn = 0;
+        newItem_dropped.fadeOut = 0;
+        console.log(newItem_dropped);
+        
+
+        var a = project.getAction(newItem_dropped.actionID);
+
+        // check if we're in frame sync mode
+        if(typeof playheadID !== 'undefined' && playheadID!='') {
+          var newStart = timeline.getCustomTime(playheadID);
+          newItem_dropped.start = newStart;
+          var myEnd = moment(newItem_dropped.start).add(5,'seconds');
+          newItem_dropped.end = myEnd;
+          newItem_dropped.syncParent = project.currentParentItemID;
+          newItem_dropped.className = 'syncChild';
+        }
+        if(a.type=='video') {
+          if(typeof a.video.duration=='undefined'||a.video.duration==0) {
+            a.video.duration = 5;
+          }
+          
+          var myEnd = moment(newItem_dropped.start).add('seconds',a.video.duration).format();
+          newItem_dropped.end = myEnd;
+
+          
+        }
+
+
+      
+        if(newItem_dropped.group.toLowerCase().indexOf('hue ')==0) {
+          var myType = 'hue';
+        } else {
+          var myType = 'device';
+        }
+        if(newItem_dropped.actionID.toLowerCase().indexOf('hue ')==0) {
+          var myActionType = 'hue';
+        } else {
+          var myActionType = 'device';
+        }
+        if(myType==myActionType) {
+          console.log('good');
+          project.addItem(newItem_dropped);
+          items.update(newItem_dropped);
+
+          // updateEditPanel({'items':[event.target.id]});
+        } else {
+          console.log('bad');
+          // remove it
+          project.deleteItem(newItem_dropped.id);
+          items.remove(newItem_dropped.id);
+        }        
+        
+
+
+
+
+    }
+
+
+    function handleObjectItemDragStart(event) {
+      var dragSrcEl = event.target;
+      
+      event.dataTransfer.effectAllowed = 'move';
+      var objectItem = {
+        content: 'objectItemData',
+        target: 'item'
+      };
+      event.dataTransfer.setData("text", JSON.stringify(objectItem));
+    }
+    var actionItems = document.querySelectorAll('.items .item');
+
+    var objectItems = document.querySelectorAll('.object-item');
+
+    for (var i = actionItems.length - 1; i >= 0; i--) {
+      var item = actionItems[i];
+      item.addEventListener('dragstart', handleDragStart.bind(this), false);
+      item.addEventListener('dragend', handleDragEnd.bind(this), false);
+    }
+
+    for (var i = objectItems.length - 1; i >= 0; i--) {
+      var objectItem = objectItems[i];
+      objectItem.addEventListener('dragstart', handleObjectItemDragStart.bind(this), false);
+    }
+
+
+    if(location.hash=='#goLive') {
+      location.hash='';
+      
+      window.setTimeout(function(){
+        $('.goLive').click();
+      },2000);
+      
+    }
+    populateChannelDropdowns();
+
+  });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+  <!-- Actions Modal-->
+  <div class="modal fade" id="actionsModal" tabindex="-1" role="dialog" aria-labelledby="actionsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">EDIT ACTION</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <form id="actionForm">
+            <fieldset>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label>Name</label>
+                      <input type="text" name="id" data-oldID="" class="bind bindAction form-control" placeholder="">
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label>Type</label>
+                      <select class="form-control bind bindProject" name="type">
+                        <option value="text">Text/image</option>
+                        <option value="video">Video</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                
+             
+            </fieldset>
+            <div id="actionTypeDetails">
+            </div>
+            <fieldset>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label>Custom HTML</label>
+                      <textarea style="height:150px" name="customCSS" class="bind bindAction form-control" placeholder="Enter any additional HTML you want here."></textarea>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label>Custom Javascript (can access jQuery/$)</label>
+                      <textarea style="height:150px" name="customJS" class="bind bindAction form-control" placeholder="Enter any additional JavaScript code you want here. Very likely to break something unless you're an experienced JS coder."></textarea>
+                    </div>
+                  </div>
+                </div>
+                
+             
+            </fieldset>
+
+
+
+         
+          </form>
+
+
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary save-action" href="login.html">Save</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+

@@ -1,0 +1,7 @@
+<p>Result for ticket number <%= code %></p>
+<h2><%-result %></h2>
+<p>
+<% for(i in guest) { %>
+	<strong><%=i%></strong>: <%=guest[i]%><br/>
+<% } %>
+</p>

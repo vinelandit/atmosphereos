@@ -1,0 +1,167 @@
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
+
+      <!-- Sidebar - Brand -->
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+        <img src="img/logo.png" alt="AtmOS logo" /><img class="min" src="img/logo-min.png" alt="AtmOS logo" />
+      </a>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider">
+
+
+      <!-- Heading -->
+      <div class="sidebar-heading">
+        Project
+      </div>
+
+      <!-- Nav Item - Project settings -->
+      <li class="nav-item">
+        <a class="nav-link showProjectSettings" href="#" data-toggle="modal" data-target="#projectSettingsModal">
+          <i class="fas fa-fw fa-cog"></i>
+          <span>Settings</span>
+        </a>
+        </li>
+        <!-- Nav Item - Utilities Collapse Menu -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseActions" aria-expanded="true" aria-controls="collapseActions">
+          <i class="fas fa-fw fa-play"></i>
+          <span>Actions</span>
+        </a>
+        <div id="collapseActions" class="collapse" aria-labelledby="headingActions" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+              <a class="collapse-item new-action" data-toggle="modal" data-target="#actionsModal" href="#">Add New</a>
+              <!-- Divider -->
+              <hr class="sidebar-divider">
+              <div class="actions-list"></div>
+          
+          </div>
+        </div>
+      </li>
+
+
+
+      <!-- Nav Item - Utilities Collapse Menu -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+          <i class="fas fa-fw fa-bullseye"></i>
+          <span>Media Targets</span>
+        </a>
+        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">Add new</h6>
+            <form id="targetsForm">
+              <div class="input-group input-group-sm" id="group-new-target">
+                <input type="text" name="target-name" class="form-control form-control-sm" placeholder="Name">
+                <div class="input-group-append add-target">
+                  <span class="input-group-text"><small><i class="fa fa-check"></i></small></span>
+                </div>
+              </div>
+              <div class="targets-list"></div>
+              
+                
+            
+            </form>
+          </div>
+        </div>
+      </li>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider">
+
+      <!-- Heading -->
+      <div class="sidebar-heading">
+        Devices
+      </div>
+
+      <!-- Nav Item - Pages Collapse Menu -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseScreens" aria-expanded="true" aria-controls="collapseScreens">
+          <i class="fas fa-fw fa-mobile-alt"></i>
+                <span class="badge badge-primary badge-counter badge-counter-devices">...</span>
+          <span>Media Screens</span>
+        </a>
+        <div id="collapseScreens" class="collapse" aria-labelledby="headingScreens" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item wsCommand" data-ws-command="flash" href="#">Flash All</a>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+            <h6 class="collapse-header device-list-header-active">Active <span class="device-list-active-number">(0)</span></h6>
+            <div class="device-list-active"></div>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+            <h6 class="collapse-header device-list-header-ready">Ready <span class="device-list-ready-number">(0)</span></h6>
+            <div class="device-list-ready"></div> 
+          </div>
+        </div>
+      </li>
+
+      <!-- Nav Item - Charts -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseIOT" aria-expanded="true" aria-controls="collapseIOT">
+          <i class="fas fa-fw fa-lightbulb"></i>
+
+                <span class="badge badge-primary badge-counter badge-counter-iot">...</span>
+          <span>Hue</span>
+        </a>
+        <div id="collapseIOT" class="collapse" aria-labelledby="headingIOT" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item phCommand" data-ph-command="flash" href="#">Flash All</a>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+            <h6 class="collapse-header device-list-header-active">Active <span class="iot-list-active-number">(0)</span></h6>
+            <div class="iot-list-active"></div>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+            <h6 class="collapse-header device-list-header-ready">Ready <span class="iot-list-ready-number">(0)</span></h6>
+            <div class="iot-list-ready"></div> 
+          </div>
+        </div>
+      </li>
+
+
+      <!-- Nav Item - Charts -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMOODO" aria-expanded="true" aria-controls="collapseMOODO">
+          <i class="fas fa-fw fa-wind"></i>
+
+                <span class="badge badge-primary badge-counter badge-counter-moodo">...</span>
+          <span>Moodo</span>
+        </a>
+        <div id="collapseMOODO" class="collapse" aria-labelledby="headingMOODO" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item mdCommand" data-md-command="flash" href="#">Flash All</a>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+            <h6 class="collapse-header device-list-header-active">Active <span class="moodo-list-active-number">(0)</span></h6>
+            <div class="moodo-list-active"></div>
+            
+          </div>
+        </div>
+      </li>
+
+      
+
+
+      <!-- Nav Item - Charts -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseWC" aria-expanded="true" aria-controls="collapseWC">
+          <i class="fas fa-fw fa-camera"></i>
+
+                <span class="badge badge-primary badge-counter badge-counter-camera">...</span>
+          <span>Webcam</span>
+        </a>
+        <div id="collapseWC" class="collapse" aria-labelledby="headingIOT" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded" style="position:relative">
+           
+            
+            
+            <% include colourGrabber %>
+            
+          </div>
+        </div>
+      </li>
+      
+
+    </ul>
+    <!-- End of Sidebar -->

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Amalia.js</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="images/favicon.ico">
+        <link href="css/default.css" rel="stylesheet">
+        <script src="../bower_components/jquery/dist/jquery.js"></script>
+        <script src="../bower_components/jquery-ui/jquery-ui.min.js"></script>        
+        <script src="../bower_components/raphael/raphael.js"></script>
+        <!-- style-player -->        
+        <link href="../build/css/amalia.js.min.css" rel="stylesheet">
+        <!-- /style-player -->        
+        <!-- script-player -->        
+        <script src="../build/js/amalia.js.min.js"></script>
+        <script src="../build/js/amalia.js-plugin-timeline.min.js"></script>        
+        <style>
+            body,html {
+                border:0;
+                margin:0;
+                padding:0;
+            }
+        </style>
+        <!-- /script-player -->
+    </head>
+    <body>
+        <div class="container">
+            
+            <div class="content">           
+                <div class="demo">
+                    <div style="height: 350px;">
+                        <div id="defaultPlayer"></div>
+                    </div>
+                    <div id="timeline"></div>
+                    <script>
+
+                        $( function () {
+                            var url = new URL(location.href);
+                            var itemID = url.searchParams.get('itemID');
+                            var projectID = url.searchParams.get('projectID');
+                            var targetID = url.searchParams.get('targetID');
+
+                            if(projectID!=''&&projectID>0) {
+                                var data = JSON.parse(localStorage.getItem('atmosProject_'+projectID));
+
+                                var targets = data.timeline.channels;
+                                var newTargets = [];
+                                for(i in targets) {
+                                    if(targets[i].id!=targetID) newTargets.push(targets[i].id);
+                                }
+                                targets = newTargets;
+                                var listOfLines = [                                                        {
+                                                            title : 'Ball moving up',
+                                                            type : 'segment',
+                                                            metadataId : 'ball-amalia01',
+                                                            color : '#F00',
+                                                            pointNav : true
+                                                        }];
+                                for(i in targets) {
+                                    listOfLines.push({
+
+                                        title : targets[i],
+                                        type : 'segment',
+                                        metadataId : targets[i],
+                                        color : '#F00',
+                                        pointNav : true
+                                    });
+                                }
+                                var actions = data.actions;
+                                console.log(targets);
+                                console.log(actions);
+                            } else {
+                                alert('invalid project ID.')
+                            }
+                            if(itemID==''||itemID<1) {
+                                alert('invalid item ID.');
+                            } else {
+                                function checkAmaliaReady() {
+                                    var c = $('.ajs-row.toolsbar .info .count').text();
+                                    if(c>0) {
+                                        
+                                        console.log(amalia.getBlocksMetadata());
+                                        $('.components.ui-sortable').css({'height':'auto'});
+
+                                    } else {
+                                        window.setTimeout(function(){
+                                            checkAmaliaReady();
+                                        },500);
+                                    }
+                                }
+                                window.setInterval(function(){
+                                    console.log(amalia.getCurrentTime());
+                                    var duration = 3;
+                                    var tcin = amalia.getCurrentTime();
+                                    var tcout = tcin + duration;
+                                    amalia.addMetadataItem('hudl',{
+                                            'duration':duration,
+                                            'tclevel':1,
+                                            'label':"bork",
+                                            'tcin':tcin,
+                                            'tcout':tcout
+                                        });
+                                },500);
+                                var amalia = $( "#defaultPlayer" ).mediaPlayer( {
+                                    autoplay : false,
+                                    src : "/video/sm.mp4",
+                                    controlBar :
+                                    {
+                                        sticky : true
+                                    },
+                                    callbacks : 
+                                    {
+                                        onready: 'onready'
+                                    },
+                                    plugins : {
+                                        dataServices : [
+                                            '../samples-data/examples/json/amalia01-ball.json'
+                                        ],
+                                        list : [
+                                            {
+                                                'className' : 'fr.ina.amalia.player.plugins.TimelinePlugin',
+                                                'container' : '#timeline',
+                                                'parameters' : {
+                                                    listOfLines : 
+                                                        
+
+
+                                                        listOfLines
+                                                    
+                                                }
+                                            }
+                                        ]
+                                    }
+                                } );
+
+                                amalia = $('#defaultPlayer').data('fr.ina.amalia.player').getPlayer();
+                                checkAmaliaReady();
+                            }
+                            
+
+                            
+                        } );
+                    </script>
+                    
+                </div>
+            </div>
+            
+        </div>
+    </body>
+</html>

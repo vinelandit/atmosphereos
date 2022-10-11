@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <title>AtmOS Colour Grabber</title>
+<head>
+
+<% include partials/head %>
+
+  <!-- COLOUR EXCTRACTOR ASSETS -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
+</head>
+
+<body>
+ 
+
+  <div class="select">
+    <label for="videoSource">Video source: </label><select id="videoSource"></select>
+  </div>
+<img id="magicImage" src="http://192.168.1.8:8080/video" />
+  <!-- <video id="webcamSource" autoplay muted src="http://192.168.1.3:8080/video"></video> -->
+            <!-- <video id="webcamSource" controls="controls" src="video/sm.mp4"></video> -->
+  <canvas id="canvas" style="display:none;width:300px;height:150px"></canvas>
+
+
+  <% include partials/logoutModal %>
+  <% include partials/scripts %>
+  <% include partials/wshelpers %>
+  <% include partials/backendScripts %>
+<script type="text/javascript">
+  $(document).ready(function(){
+
+
+
+        var thecanvas = document.getElementById('magicImage');
+        thecanvas.crossOrigin = "Anonymous";
+        thecanvas.src = thecanvas.src + '?' + new Date().getTime();
+        thecanvas.setAttribute('crossOrigin', '');
+
+        var myID = 'COLOUR';
+        var status = 'ready';
+        lastPing = Date.now();
+        
+        function startSocket() {
+
+
+
+
+          var FS = false;
+
+          window.WebSocket = window.WebSocket || window.MozWebSocket;
+          // if browser doesn't support WebSocket, just show
+          // some notification and exit
+          if (!window.WebSocket) {
+            content.html($('<p>',
+              { text:'Sorry, but your browser doesn\'t support WebSocket.'}
+            ));
+            input.hide();
+            $('span').hide();
+            return;
+          }
+          // open connection
+          const socketProtocol = (window.location.protocol === 'https:' ? 'wss:' : 'ws:')
+          const echoSocketUrl = socketProtocol + '//' + window.location.hostname + ':1337/?alias='+myID;
+          connection = new WebSocket(echoSocketUrl);
+          connection.onopen = function () {
+            // first we want users to enter their names
+            console.log('connection made.');
+
+            /* non-magic method 
+            var video = document.getElementById('webcamSource');
+            */
+
+              const colorThief = new ColorThief();
+              window.setInterval(function(){
+                  /* var thecanvas = document.getElementById('canvas');
+                  var context = thecanvas.getContext('2d');
+                  context.drawImage(video, 0, 0, 300, 150); */
+                  // var dataURL = thecanvas.toDataURL();  
+
+                  // var img = document.createElement('img');
+                  // img.setAttribute('src', dataURL);
+                  var colours = colorThief.getPalette(thecanvas,5,100);
+                    var response = {
+                      "to":"MASTER",
+                      "senderAlias":myID,
+                      "command":"colours",
+                      "colours": colours,
+                      "status":status
+                    }
+                  connection.send(JSON.stringify(response));
+
+                 
+              },75);
+
+
+              
+
+            
+            window.setInterval(function(){
+              sendHeartbeat(connection,myID,status);
+            },4000);
+          };
+          connection.onerror = function (error) {
+            // just in there were some problems with connection...
+            console.log('Sorry, but there\'s some problem with your connection or the server is down.');
+          };
+
+          
+
+          /**
+           * This method is optional. If the server wasn't able to
+           * respond to the in 3 seconds then show some error message 
+           * to notify the user that something is wrong.
+           */
+          setInterval(function() {
+            if (connection.readyState !== 1) {
+              console.log('Unable to communicate with the WebSocket server.');
+            }
+          }, 3000);
+
+        };
+
+
+        
+        console.log('Starting socket');
+
+        
+        startSocket();
+        console.log('Started socket.');
+
+
+  });
+  
+</script>
+</body>
+
+</html>
