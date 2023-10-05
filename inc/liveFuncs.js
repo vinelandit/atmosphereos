@@ -465,7 +465,7 @@ const live = {
                                 customFonts[action.text.font] = action.text.font;
                                 someFonts = true;
                             }
-                            if (action.text.additionalFont.indexOf('.') > -1) {
+                            if (action.text.additionalFont && action.text.additionalFont.indexOf('.') > -1) {
                                 customFonts[action.text.additionalFont] = action.text.additionalFont;
                                 someFonts = true;
                             }
