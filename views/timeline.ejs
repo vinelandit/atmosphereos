@@ -13,6 +13,8 @@
 
   <!-- TIMELINE ASSETS -->
   <script type="text/javascript" src="/js/vis-timeline-graph2d.min.js"></script>
+
+  <script src="/js/VideoFrame.min.js"></script>
   <link href="/css/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
 
 </head>
@@ -39,7 +41,7 @@
           <div class="">
             
             <div class="video-preview">
-                <video src="" controls></video>
+                <video id="previewVideo" src="" controls></video>
             </div>
 
             <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> -->
@@ -471,7 +473,7 @@
       $('.btn-frame-edit').addClass('btn-warning').removeClass('btn-info').find('i').addClass('fa-check-square').removeClass('fa-square');
       var v = $('.video-preview');
       if(v.find('video').attr('src')!='/video/'+a.video.filename) {
-        v.slideDown('fast').find('video').attr('src','/video/'+a.video.filename);
+        v.slideDown('fast').find('video').attr('src','/video/'+a.video.filename).attr('data-id', i.id).attr('data-channel', i.group);
       }
       
       lastVideoTime = -1000;
@@ -480,6 +482,7 @@
         vidtime = window.setInterval(function(){
             var i = project.getItem(project.currentParentItemID);
             var t = $('.video-preview video')[0].currentTime;
+
             if(lastVideoTime != t) {
               // update playhead
               var newTime = moment(i.start).add('seconds',t);
@@ -493,6 +496,70 @@
            
           
         },250);
+        // Playing event
+        $('.video-preview video')[0].addEventListener("playing", function() {
+
+          if(typeof vidObject !== 'undefined') {
+            stopVideoSync(vidObject);
+            haltLive(connection);
+            delete vidObject;
+          }
+          const itemID = $(this).attr('data-id');
+          const channelID = $(this).attr('data-channel');
+          const ta = [ ...project.timelineItems ];
+          const syncList = [];
+
+          console.log('items', ta, itemID);
+          ta.sort(function( a, b ) {
+            if ( moment(a.start) < moment(b.start) ){
+              return -1;
+            } else
+            if ( moment(a.start) > moment(b.start )){
+              return 1;
+            } else {
+              if(a.group.toLowerCase().indexOf('hue ')==0||a.group.toLowerCase().indexOf('moodo ')) {
+                // demote the hue stuff
+                return 1;
+              } else {
+                return -1;
+              }
+            }
+            return 0;
+          },);
+          var now = new moment();
+          
+          for (i in ta) {
+
+          
+            var st = moment(ta[i].start);
+            var en = moment(ta[i].end);
+            if (ta[i].syncParent == itemID) {            
+                addToSyncList(i, syncList, ta, st, en, moment);
+            }            
+          }
+          
+          // update changed items on timeline
+          const mySyncList = syncList[channelID];
+          vidObject = videoSyncMonitor(itemID, 'previewVideo', mySyncList, connection, 'preview');
+        });
+        // Pause event
+        $('.video-preview video')[0].addEventListener("pause", function() {
+          if(typeof vidObject !== 'undefined') {
+            console.log('stopping video sync from preview');
+            stopVideoSync(vidObject);
+            haltLive(connection);
+            delete vidObject;
+          }
+        });
+        // Seeking event
+        $('.video-preview video')[0].addEventListener("seeking", function() {
+          if(typeof vidObject !== 'undefined') {
+            console.log('stopping video sync from preview');
+            stopVideoSync(vidObject);
+            haltLive(connection);
+            delete vidObject;
+          }
+        });
       } else {
 
       }
@@ -919,6 +986,8 @@
       }));
     }); 
 
+    
+
 
     function updateEditPanel(data) {
       console.log('UPDATE EDIT PANEL',data);
@@ -1126,41 +1195,8 @@
         },5000);
       } else {
         // get the action
-        var a = project.getAction(actionID);
-
-        a.duration = Math.max(5,parseFloat(i.fadeIn)+parseFloat(i.fadeOut));
-        a.fadeIn = i.fadeIn;
-        a.fadeOut = i.fadeOut;
-        console.log(a);
-        console.log(target);
-        var customFonts = [];
-        var someFonts = false;
-        var fontFaces = '';
-
-        if(typeof a.text !== 'undefined') {
-          // check for custom fonts...
-          if(a.text.font.indexOf('.')>-1) {
-
-            someFonts = true;
-            customFonts[a.text.font] = a.text.font;
-          }
-          if(typeof a.text.additionalFont !== 'undefined' && a.text.additionalFont.indexOf('.')>-1) {
-            someFonts = true;
-            customFonts[a.text.additionalFont] = a.text.additionalFont;
-          }
-        }
-        if(someFonts) {
-          for(i in customFonts) {
-            var temp = i.split('.');
-            var format = temp[1];
-            fontFaces += `@font-face {
-              font-family:'`+i+`';
-              src: url(/fonts/`+i+`) format('`+format+`');
-            }
-            `;
-          }
-        }
-        testAction(connection,target,actionID,ejs.render(template[a.type],a),a.duration,a.fadeIn,a.fadeOut,fontFaces);
+        sendTestAction(i, target, connection, 5);
+        
       }
       
     });
@@ -1550,6 +1586,29 @@
       
     }
     populateChannelDropdowns();
+
+
+
+
+    function sortByTime( a, b ) {
+      if ( moment(a.start) < moment(b.start) ){
+        return -1;
+      } else
+      if ( moment(a.start) > moment(b.start )){
+        return 1;
+      } else {
+        if(a.group.toLowerCase().indexOf('hue ')==0||a.group.toLowerCase().indexOf('moodo ')) {
+          // demote the hue stuff
+          return 1;
+        } else {
+          return -1;
+        }
+      }
+      return 0;
+    }   
+
+
+
 
   });
 </script>

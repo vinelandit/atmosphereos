@@ -56,6 +56,7 @@
   function populateProjectDropdowns() {
     var t = $('.projectsDropdown');
     var l = project.getSavedProjects;
+
     t.each(function(){
       t.html('');
       var index = 0;
@@ -68,6 +69,7 @@
     
 
   }
+
   function saveFromForm(formElement,object,infixPath) {
     // put validation here
     if(typeof infixPath === 'undefined') {
@@ -138,6 +140,8 @@ $(document).ready(function() {
     $('#movieCuesOverlay').show().html('<iframe style="border-width:0;position:fixed;left:2vw;width:96vw;top:2vh;height:96vh" src="/js/amalia/samples/ajs-plugin-timeline.html?projectID='+project.id+'&itemID=i123987&targetID=mac mini"></iframe>');
       
   }); */
+
+
 
                    
 
@@ -1137,6 +1141,22 @@ $(document).ready(function() {
           return list;
         }
       },
+      dumpSavedProjects: {
+        get : function() {
+          var i = 1;
+          var list = [];
+          for(i=1;i<=50;i++) {
+            var data = localStorage.getItem('atmosProject_'+i);
+            if(data!=''&&data!=null) {
+              data = JSON.parse(data);
+              
+              list[i] = data;
+            }
+          }
+          console.log(list);
+          // return list;
+        }
+      },
       settings : {
           get : function() {
             return {
@@ -1161,9 +1181,9 @@ $(document).ready(function() {
   });
 
   /**
-   * Asynchronously loads the GeoJSON at the provided url, replacing any existing data.
+   * Asynchronously loads the JSON at the provided url, replacing any existing data.
    * @param {Object} url The url to be processed.
-   * @returns {Promise} a promise that will resolve when the GeoJSON is loaded.
+   * @returns {Promise} a promise that will resolve when the JSON is loaded.
    */
   atmosProject.prototype.load = function(id) {
       var data = localStorage.getItem('atmosProject_'+id);

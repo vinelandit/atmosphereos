@@ -330,7 +330,9 @@ const atmos = {
                   }            
 
               } else if (data.command=='heartbeat') {
-                
+                  
+                console.log('heartbeat', senderID);
+
                 myClientID = connection.remoteAddress;
                 if(typeof data.targets !== 'undefined') {
                   targets = data.targets;
@@ -497,6 +499,7 @@ const atmos = {
 
           }
         }
+        console.log(manifest);
         var response = {
           "senderAlias" : "SERVER",
           "to" : 'MASTER',

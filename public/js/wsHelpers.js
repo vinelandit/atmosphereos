@@ -123,6 +123,14 @@ function sendHue(connection,target,hueCommand) {
 	}
 	connection.send(JSON.stringify(response));
 }
+function haltLive(connection) {
+	var response = {
+	  "to":"SERVER",
+	  "senderAlias":'MASTER',
+	  "command":"haltLive"
+	}
+	connection.send(JSON.stringify(response));
+}
 function sendMoodo(connection,target,moodoCommand) {
 	if(typeof target === 'undefined') {
 		var target = '!all';	

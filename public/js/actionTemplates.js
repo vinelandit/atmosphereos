@@ -1,6 +1,6 @@
 var template = new Array();
 
-template['text'] = `<div class="action" data-type="text" data-id="<%= id %>" style="background-color:<%= text.bgcolor %>;<% if (text.image!='') { %>background-image:url('/images/<%= text.image %>')<% } %>">
+template['text'] = `<div class="action" data-type="text" data-id="<%= id %>" style="background-color:<%= text.bgcolor %>;<% if (text.image !== 'null' && text.image !== null && text.image!='') { %>background-image:url('/images/<%= text.image %>')<% } %>">
 	<div class="text">
 		<h1 style="
 		color:<%= text.color %>;

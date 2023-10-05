@@ -89,11 +89,12 @@ const eb = {
   init: function() {
     const _this = this;
     if(live.project == null || typeof live.project.eventBriteEventID == 'undefined' || typeof live.project.eventBritePrivateKey == 'undefined') {
-      this.initTimer = setTimeout(function(){
+      /* this.initTimer = setTimeout(function(){
         console.log('Re-checking eventBrite info...');
         _this.init();
 
-      },1000);
+      },3000);
+      */
     } else {
       if(this.initTimer!=null) {
         clearTimeout(this.initTimer);

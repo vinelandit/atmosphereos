@@ -36,7 +36,7 @@ atmos = require('./inc/atmosServer.js').atmos;
 atmos.start(webSocketsServerPort);
 
 eb = require('./inc/eventBriteAPI.js').eb;
-eb.init();
+// eb.init();
 
 
 

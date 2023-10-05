@@ -3,6 +3,7 @@ const moment = require('../public/js/moment.min.js');
 const templates = require('../public/js/actionTemplates.js');
 const ejs = require('ejs');
 const colour = require('../public/js/colourHelpers.js');
+const addToSyncList = require('../public/js/addToSyncList.js');
 const csv = require('fast-csv');
 const fs = require('fs');
 const live = {
@@ -215,14 +216,14 @@ const live = {
         }
     },
 
-    goLive() {
+    goLive(preview = false) {
 
         this.accumulatorValues['ctChecked'] = 0;
         var _this = this;
         // Start dispatcher daemon,
         // Send latest assets to screens
 
-        // kill any pre-existing tidy up scheuled task
+        // kill any pre-existing tidy up scheduled task
         if (typeof this.tud !== 'undefined') {
             console.log('Killing pre-existing tidy up scheduled task');
             clearTimeout(this.tud);
@@ -383,50 +384,10 @@ const live = {
                                 }
                                 this.filteredTriggerArray[ts + 'ms'].push(ta[i]);
                             } else {
+                                // this item has a sync parent
                                 // add to sync list
-                                var p = null;
-                                for (j in ta) {
-                                    if (ta[j].id == ta[i].syncParent) {
-                                        var p = ta[j];
-                                        break;
-                                    }
-                                }
-                                if (p !== null) {
-                                    // calculate relative time in ms, then add to parent's sync list
-                                    var rt = moment.duration(moment(ta[i].start).diff(p.start));
-                                    // console.log('calculating the difference between ' + ta[i].start + ' and ' + p.start + ' in milliseconds');
-                                    var ms = rt.as('milliseconds');
-                                    // console.log('result: ' + ms + 'ms');
-                                    var duration = moment.duration(en.diff(st)).as('seconds');
-                                    var action = {
-
-                                        "actionID": ta[i].actionID,
-                                        "to": ta[i].group,
-                                        "fadeIn": ta[i].fadeIn,
-                                        "fadeOut": ta[i].fadeOut,
-                                        "duration": duration,
-                                        "color": ta[i].color,
-                                        "moodoSlot0": ta[i].moodoSlot0,
-                                        "moodoSlot1": ta[i].moodoSlot1,
-                                        "moodoSlot2": ta[i].moodoSlot2,
-                                        "moodoSlot3": ta[i].moodoSlot3
-
-                                    };
-                                    if (typeof this.syncLists[p.group] === 'undefined') {
-                                        this.syncLists[p.group] = {};
-                                    }
-                                    if (typeof this.syncLists[p.group][p.id] === 'undefined') {
-                                        this.syncLists[p.group][p.id] = {};
-                                    }
-                                    if (typeof this.syncLists[p.group][p.id][ms + 'ms'] === 'undefined') {
-                                        this.syncLists[p.group][p.id][ms + 'ms'] = {
-                                            "time": ms,
-                                            "actions": []
-                                        };
-                                    }
-                                    this.syncLists[p.group][p.id][ms + 'ms'].actions.push(action);
-
-                                }
+                                addToSyncList.addToSyncList(i, this.syncLists, ta, st, en, moment);
+                                
                             }
                         }
                     }
@@ -561,22 +522,6 @@ const live = {
                     c.send(JSON.stringify(response));
 
 
-
-                    // resend accumulators
-                    /* for(var i in this.project.accumulators) {
-                        console.log('Resending acc '+this.project.accumulators[i].name+': '+this.accumulatorValues[this.project.accumulators[i].name]);
-                        var r = {
-                            "senderAlias":"SERVER",
-                            "to":target,
-                            "command":"accumulator",
-                            "name":this.project.accumulators[i].name,
-                            "value":this.accumulatorValues[this.project.accumulators[i].name]
-                          }
-                          c.send(JSON.stringify(r));
-                    }  */
-                      
-                      
-
                 }
 
 
@@ -585,19 +530,6 @@ const live = {
             }
 
 
-            /* if(!this.filteredTriggerArray.length) {
-              // empty, stop
-              console.log('Trigger array empty, stopping');
-              for(a in atmos.aliases) {
-                var response = {
-                  "to":a,
-                  "command":"haltLive",
-                  "senderAlias":"SERVER"
-                };
-                var c = atmos.clients[ atmos.aliases[a] ];
-                if(typeof c !== 'undefined') c.send(JSON.stringify(response));
-              }
-            } */
             var k = Object.keys(this.filteredTriggerArray);
             if (k.length) {
                 console.log('starting dispatcher');
