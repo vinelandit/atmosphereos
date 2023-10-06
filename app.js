@@ -21,8 +21,8 @@ const app = require('./inc/webapp.js').setup(webSocketsServerPort,expressPort);
 
 // Phillips Hue object
 hue = require('./inc/hue.js').hue;
-// hue.search();
-hue.manualInit();
+hue.search();
+// hue.manualInit();
 
 // Moodo stinkbox object
 moodo = require('./inc/moodo.js').moodo;
@@ -42,8 +42,19 @@ eb = require('./inc/eventBriteAPI.js').eb;
 
 
 /*** END GLOBAL OBJECTS ***/
+const MAC_PLATFORM = 'darwin';
+const { platform } = require('os');
+const { exec } = require('child_process');
+const osPlatform = platform(); 
+let url = 'http://localhost:3000/timeline';
 
-
+if(osPlatform == MAC_PLATFORM) {
+	command = `open -a "Google Chrome" ${url}`;
+} else {
+	command = `start "Google Chrome" ${url}`;
+}
+console.log(`executing command: ${command}`);
+exec(command);
 // open.openApp(open.apps.chrome);
 
 

@@ -331,7 +331,7 @@ const atmos = {
 
               } else if (data.command=='heartbeat') {
                   
-                console.log('heartbeat', senderID);
+                // console.log('heartbeat', senderID);
 
                 myClientID = connection.remoteAddress;
                 if(typeof data.targets !== 'undefined') {
