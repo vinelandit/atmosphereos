@@ -17,8 +17,8 @@ front['device-list-item-ready'] = `<a class="text-warning collapse-item device-l
 front['device-list-item-active'] = `<a class="text-success collapse-item device-list-item" data-alias="<%= alias %>" href="#"><strong><%= alias %></strong></a>
 `;          
 front['target'] =`<div class="input-group input-group-sm">
-                    <input type="text" name="existing-target" class="form-control form-control-sm" data-oldID="<%= id %>" value="<%= id %>" placeholder="Name" <% if(id.toLowerCase().indexOf('hue ')==0) { %>disabled="disabled" <% } %>>
-                    <% if(id.toLowerCase().indexOf('hue ')!=0) { %><div class="input-group-append delete-target">
+                    <input type="text" name="existing-target" class="form-control form-control-sm" data-oldID="<%= id %>" value="<%= id %>" placeholder="Name" <% if(id.toLowerCase().indexOf('hue ')==0 || id.toLowerCase().indexOf('moodo ')==0)  { %>disabled="disabled" <% } %>>
+                    <% if(id.toLowerCase().indexOf('hue ')!=0 && id.toLowerCase().indexOf('moodo ')!=0) { %><div class="input-group-append delete-target">
                       <span class="input-group-text"><small><i class="fa fa-times"></i></small></span>
                     </div>
                     <div class="input-group-append rename-target">

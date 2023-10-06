@@ -32,7 +32,7 @@ const moodo = {
         'Accept' : 'application/json'
       }
     }, (res) => {
-      // A chunk of data has been recieved.
+      // A chunk of data has been received.
 
       res.resume();
       res.on('data', (chunk) => {
@@ -53,7 +53,7 @@ const moodo = {
             fs.writeFile("./moodokey.txt", moodo['key'],function (err,data) 
              {
                 //do stuff
-                console.log('Write hue key to file');
+                console.log('Write moodo key to file');
              });
             
             _this.getMoodo();

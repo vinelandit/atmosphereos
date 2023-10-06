@@ -1,7 +1,7 @@
 // Port where we'll run the websocket server
 const webSocketsServerPort = 1337;
 const expressPort = 3000;
-const open = require('open');
+// const open = require('open');
 
 // Register local IP so users can be redirected from https://ray.scot/atmos ultimately atmosphere.co/[eventcode]
 mapIP = require('./inc/mapIP.js').mapIP;
@@ -44,7 +44,7 @@ eb = require('./inc/eventBriteAPI.js').eb;
 /*** END GLOBAL OBJECTS ***/
 
 
-open.openApp(open.apps.chrome);
+// open.openApp(open.apps.chrome);
 
 
 module.exports = app;
